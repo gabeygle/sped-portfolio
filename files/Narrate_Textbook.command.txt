@@ -1,0 +1,18 @@
+#!/bin/bash
+# Double-click this file to narrate each Chapter_*.txt into an .m4a audio file.
+# Free, offline, uses the macOS built-in `say` voice. No account needed.
+cd "$(dirname "$0")"
+VOICE="Zoe (Premium)"   # Siri premium voice. Download it first: System Settings > Accessibility >
+                        # Spoken Content > System Voice > Manage Voices > English (US) > Zoe (Premium).
+                        # If say errors on the name, run:  say -v '?'  to see the exact installed name.
+RATE=175           # words per minute; lower = slower
+shopt -s nullglob
+echo "Starting narration with voice: $VOICE"
+for f in Chapter_*.txt; do
+  base="${f%.txt}"
+  echo "Narrating $f  ->  $base.m4a   (this can take a few minutes per chapter)"
+  say -v "$VOICE" -r "$RATE" -f "$f" -o "$base.m4a" --file-format=m4af --data-format=aac \
+    || say -r "$RATE" -f "$f" -o "$base.aiff"
+done
+echo ""
+echo "Done. The .m4a audio files are in this folder. You can close this window."

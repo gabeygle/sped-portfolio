@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M2 &middot; Virtual Diorama &middot; Gabe Esquivel</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+.inline-wrap{flex:1;min-width:0}
+.artifact-tag{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+color:#4a5568;background:#eef3fc;border-bottom:1px solid #d6e0f0;
+padding:.72rem 1.4rem}
+.diorama-root{display:block}
+.diorama-root blockquote{background:none;border:0;border-radius:0;font-style:normal;
+color:inherit;padding:0;margin:0}
+.diorama-root a{color:inherit;text-decoration:none}
+.diorama-root h1,.diorama-root h2,.diorama-root h3,.diorama-root h4{margin:0;font-size:inherit;color:inherit;
+line-height:inherit;font-weight:inherit}
+.diorama-root p,.diorama-root li{font-size:inherit;line-height:inherit}
+.diorama-root ul,.diorama-root ol{margin:0;padding:0}
+.diorama-root .note,.diorama-root .ref{background:none;border:0;padding:0;color:inherit;font-size:inherit;
+border-radius:0}
+.diorama-root .card{background:none;border:0;border-radius:0;padding:0}
+.diorama-root .button{background:none;color:inherit;padding:0;border-radius:0;font-weight:inherit;margin:0}
+.diorama-root{
+    --ink:#21201c;
+    --muted:#6b675f;
+    --line:#e4ddd0;
+    --bg:#f7f3ec;
+    --card:#ffffff;
+    --accent:#9a4a2f;        
+    --accent-soft:#f0e2da;
+    --being:#7a5c3e;
+    --becoming:#3f6b5f;
+    --doing:#8a5a86;
+    --connecting:#b06a2c;
+    --shadow:0 1px 2px rgba(33,32,28,.06),0 10px 30px rgba(33,32,28,.07);
+    --radius:16px;
+  }
+.diorama-root *{box-sizing:border-box;}
+.diorama-root{scroll-behavior:smooth;}
+.diorama-root{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+.diorama-root .wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
+.diorama-root header.hero{
+    padding:72px 0 40px;
+    border-bottom:1px solid var(--line);
+    text-align:center;
+  }
+.diorama-root .eyebrow{
+    font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:0 0 14px;
+  }
+.diorama-root h1{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:600;
+    font-size:clamp(2.4rem,6vw,4rem);
+    line-height:1.05;
+    margin:0 0 18px;
+    letter-spacing:-.01em;
+  }
+.diorama-root .hero p.lede{
+    max-width:680px;margin:0 auto;color:var(--muted);font-size:1.08rem;
+  }
+.diorama-root .hero .book{
+    margin-top:18px;font-size:.95rem;color:var(--muted);font-style:italic;
+  }
+.diorama-root nav.themes{
+    position:sticky;top:0;z-index:20;
+    background:rgba(247,243,236,.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+    padding:12px 14px;
+  }
+.diorama-root nav.themes a{
+    text-decoration:none;color:var(--muted);font-weight:500;font-size:.92rem;
+    padding:6px 14px;border-radius:999px;transition:.2s;
+  }
+.diorama-root nav.themes a:hover{background:var(--accent-soft);color:var(--ink);}
+.diorama-root section.theme{padding:58px 0 10px;}
+.diorama-root .theme-head{margin-bottom:30px;border-left:4px solid var(--tcol,var(--accent));padding-left:18px;}
+.diorama-root .theme-head .num{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--tcol,var(--accent));font-weight:600;}
+.diorama-root .theme-head h2{
+    font-family:"Fraunces",Georgia,serif;font-weight:600;
+    font-size:clamp(1.7rem,4vw,2.4rem);margin:4px 0 0;
+  }
+.diorama-root .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    margin-bottom:34px;
+    display:grid;
+    grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+  }
+.diorama-root .card.reverse{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);}
+.diorama-root .card.reverse .media{order:2;}
+.diorama-root .card.reverse .body{order:1;}
+.diorama-root .media{background:#efe9df;display:flex;flex-direction:column;}
+.diorama-root .media .primary{width:100%;height:auto;display:block;}
+.diorama-root .media video.primary{background:#000;}
+.diorama-root .thumbs{display:flex;gap:0;background:#e2dacb;border-top:1px solid #e2dacb;}
+.diorama-root .thumbs figure{margin:0;flex:1;border-right:1px solid #d6cdbb;}
+.diorama-root .thumbs figure:last-child{border-right:none;}
+.diorama-root .thumbs img{width:100%;height:140px;object-fit:contain;background:#efe9df;display:block;}
+.diorama-root .thumbs figcaption{
+    font-size:.68rem;color:#6b675f;text-align:center;padding:6px 4px;line-height:1.3;
+    background:#efe9df;
+  }
+.diorama-root .placeholder{
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    min-height:300px;padding:30px;background:linear-gradient(135deg,#2a2823,#46372b);
+    color:#e9ddcd;
+  }
+.diorama-root .placeholder span{font-family:"Fraunces",serif;font-style:italic;font-size:1.05rem;opacity:.9;}
+.diorama-root .carousel{position:relative;background:#efe9df;overflow:hidden;transition:height .35s ease;}
+.diorama-root .carousel .slides{
+    display:flex;align-items:flex-start;
+    overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+.diorama-root .carousel .slides::-webkit-scrollbar{display:none;}
+.diorama-root .carousel .slide{flex:0 0 100%;scroll-snap-align:center;margin:0;position:relative;}
+.diorama-root .carousel .slide img, .diorama-root .carousel .slide video{
+    width:100%;height:auto;display:block;background:#efe9df;
+  }
+.diorama-root .carousel .slide figcaption{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:34px 14px 30px;text-align:center;
+    color:#fff;font-size:.76rem;letter-spacing:.02em;
+    background:linear-gradient(transparent,rgba(20,18,15,.7));
+    pointer-events:none;
+  }
+.diorama-root .carousel .cbtn{
+    position:absolute;top:50%;transform:translateY(-50%);
+    width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;z-index:3;
+    background:rgba(20,18,15,.5);color:#fff;font-size:1.5rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;transition:.2s;
+  }
+.diorama-root .carousel .cbtn:hover{background:rgba(20,18,15,.82);}
+.diorama-root .carousel .cbtn.prev{left:12px;}
+.diorama-root .carousel .cbtn.next{right:12px;}
+.diorama-root .carousel .dots{
+    position:absolute;bottom:12px;left:0;right:0;z-index:3;
+    display:flex;gap:8px;justify-content:center;
+  }
+.diorama-root .carousel .dots button{
+    width:9px;height:9px;border-radius:50%;border:none;padding:0;cursor:pointer;
+    background:rgba(255,255,255,.55);transition:.2s;
+  }
+.diorama-root .carousel .dots button.active{background:#fff;transform:scale(1.35);}
+.diorama-root .body{padding:30px 32px;align-self:center;}
+.diorama-root .kicker{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tcol,var(--accent));font-weight:600;margin:0 0 8px;}
+.diorama-root .body h3{
+    font-family:"Fraunces",Georgia,serif;font-weight:600;
+    font-size:1.45rem;line-height:1.15;margin:0 0 4px;
+  }
+.diorama-root .body .author{color:var(--muted);font-size:.98rem;margin:0 0 16px;}
+.diorama-root .body p{margin:0 0 14px;}
+.diorama-root .body ol.args{margin:0 0 14px;padding-left:20px;}
+.diorama-root .body ol.args li{margin-bottom:6px;}
+.diorama-root blockquote{
+    margin:18px 0;padding:14px 18px;border-left:3px solid var(--tcol,var(--accent));
+    background:var(--accent-soft);border-radius:0 10px 10px 0;
+    font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:1.02rem;color:#43382f;
+  }
+.diorama-root blockquote cite{display:block;margin-top:8px;font-size:.85rem;font-style:normal;color:var(--muted);}
+.diorama-root .credit{font-size:.82rem;color:var(--muted);}
+.diorama-root .credit a{color:var(--accent);}
+.diorama-root section.refs{padding:60px 0 40px;border-top:1px solid var(--line);margin-top:30px;}
+.diorama-root section.refs h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.9rem;margin:0 0 6px;}
+.diorama-root section.refs .note{color:var(--muted);font-size:.9rem;margin:0 0 24px;}
+.diorama-root .ref-list{list-style:none;padding:0;margin:0;}
+.diorama-root .ref-list li{
+    padding-left:2.2em;text-indent:-2.2em;   
+    margin-bottom:14px;font-size:.96rem;line-height:1.55;
+  }
+.diorama-root .ref-list a{color:var(--accent);word-break:break-word;}
+.diorama-root .flag{color:var(--accent);font-style:italic;font-size:.85em;}
+.diorama-root footer.foot{
+    text-align:center;padding:36px 0 60px;color:var(--muted);font-size:.85rem;
+    border-top:1px solid var(--line);
+  }
+@media (max-width:760px){.diorama-root .card, .diorama-root .card.reverse{grid-template-columns:1fr;}
+.diorama-root .card.reverse .media{order:1;}
+.diorama-root .card.reverse .body{order:2;}
+.diorama-root .body{padding:24px 22px;}
+.diorama-root header.hero{padding:54px 0 32px;}}
+</style>
+</head><body><div class="layout">
+<aside class="sidebar"><button class="menu-btn" onclick="document.getElementById('nav').classList.toggle('open')">Menu</button>
+<a class="brand" href="index.html">Gabe Esquivel<small>SPED Portfolio · Making competitive debate inclusive</small></a>
+<nav class="nav" id="nav">
+<h4>Portfolio</h4>
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<h4>SPED 854 · Collaboration</h4>
+<a href="who-am-i.html">M1 · Who Am I</a>
+<a href="philosophy.html">M1/M8 · Philosophy (Revised)</a>
+<a href="diorama.html" class="active">M2 · Virtual Diorama</a>
+<a href="pd-presentation.html">M3 · PD Presentation</a>
+<a href="co-teaching-tips.html">M5 · Co-Teaching Tips</a>
+<a href="coaching-conversation.html">M6 · Coaching Conversation</a>
+<a href="iris-families.html">M7 · IRIS Families</a>
+<a href="textbook-audio.html">M8 · Textbook Audio</a>
+<a href="disproportionality.html">Disproportionality (in progress)</a>
+<h4>Understanding Autism</h4>
+<a href="autism-defined.html">Autism: Defined</a>
+<a href="autism-timeline.html">Timeline</a>
+<a href="autism-etiology.html">Etiology</a>
+<a href="autism-characteristics.html">Characteristics</a>
+<a href="hfa-lfa-masking.html">HFA, LFA & Masking</a>
+<a href="neurobiology.html">A Note on Neurobiology</a>
+<h4>Evidence-Based Practice</h4>
+<a href="ebps-fads.html">EBPs, Fads & Pseudoscience</a>
+<a href="key-constructs.html">15 Key Constructs</a>
+<a href="ebp-academics.html">EBPs for Academics</a>
+<a href="ebp-social.html">EBPs for Social Outcomes</a>
+<a href="self-management.html">A Note on Self-Management</a>
+<h4>Assessment</h4>
+<a href="assessment-process.html">Assessment Process</a>
+<a href="interpreting-results.html">Interpreting Test Results</a>
+<h4>Resources</h4>
+<a href="references.html">References</a>
+</nav></aside>
+<div class="main inline-wrap">
+<div class="artifact-tag">SPED 854 &middot; Module 2 artifact &mdash; Virtual Diorama</div>
+<div class="diorama-root">
+
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">A Visual Anthology Project</p>
+    <h1>Dioramas</h1>
+    <p class="lede">Eight stories from <em>Disability Visibility</em>, each translated into a visual diorama and a short reflection on collaboration, contradiction, and connection.</p>
+    <p class="book">Drawn from <em>Disability Visibility: First-Person Stories from the Twenty-First Century</em>, edited by Alice Wong (Vintage Books, 2020).</p>
+  </div>
+</header>
+
+<nav class="themes" aria-label="Jump to theme">
+  <a href="#being">Being</a>
+  <a href="#becoming">Becoming</a>
+  <a href="#doing">Doing</a>
+  <a href="#connecting">Connecting</a>
+  <a href="#references">References</a>
+</nav>
+
+<main class="wrap">
+
+  <!-- ================= BEING ================= -->
+  <section class="theme" id="being" style="--tcol:var(--being)">
+    <div class="theme-head">
+      <div class="num">Part One</div>
+      <h2>Being</h2>
+    </div>
+
+    <!-- Diorama 1 -->
+    <article class="card">
+      <div class="media">
+        <div class="carousel" data-carousel>
+          <div class="slides">
+            <figure class="slide"><video controls preload="metadata" poster="diorama-project/media/harriet-diorama.jpg"><source src="diorama-project/media/harriet-and-peter.mp4" type="video/mp4" />Your browser does not support embedded video. <a href="diorama-project/media/harriet-and-peter.mp4">Watch the clip</a>.</video></figure>
+            <figure class="slide"><img src="diorama-project/media/harriet-diorama.jpg" alt="Diorama artwork: a suited figure with the heads of pigs and a chicken looms over Harriet Johnson in her wheelchair at a formal dinner, a rainbow thread linking them." /></figure>
+            <figure class="slide"><img src="diorama-project/media/harriet-johnson.jpg" alt="Photograph of Harriet McBryde Johnson seated in her power wheelchair on a wooden dock." /><figcaption>Harriet McBryde Johnson</figcaption></figure>
+            <figure class="slide"><img src="diorama-project/media/singer-animal-liberation.jpg" alt="Book cover of Animal Liberation, second edition, by Peter Singer." /><figcaption>Singer&rsquo;s Animal Liberation</figcaption></figure>
+          </div>
+          <button class="cbtn prev" aria-label="Previous image" type="button">&lsaquo;</button>
+          <button class="cbtn next" aria-label="Next image" type="button">&rsaquo;</button>
+          <div class="dots" aria-label="Image navigation"></div>
+        </div>
+      </div>
+      <div class="body">
+        <p class="kicker">Unspeakable Conversations</p>
+        <h3>Unspeakable Conversations</h3>
+        <p class="author">Harriet McBryde Johnson</p>
+        <p>Harriet McBryde Johnson is an attorney and activist from North Carolina. She engaged in debate with the famed Peter Singer, author of <em>Animal Liberation</em>, who has garnered notoriety from two arguments:</p>
+        <ol class="args">
+          <li>Animal consumption is morally impermissible.</li>
+          <li>Abortion and infanticide of disabled children is morally permissible.</li>
+        </ol>
+        <p>Both arguments are about the nature of suffering and use utilitarian and consequentialist evaluations. Singer&rsquo;s arguments gain special attention because of the apparent contradiction between the value of animals and the value of disabled people in his paradigm.</p>
+        <p>Singer and Johnson are both atheists who use secular philosophy to rationalize their arguments; yet they arrive at different conclusions. Johnson&rsquo;s story describes not only the rational contradictions that arose in the debate but also the relational contradictions that surface when a disabled person and a secular, maximalist utilitarian engage in &ldquo;polite&rdquo; dialogue. The diorama renders those contradictions &mdash; and the strange &ldquo;collaboration&rdquo; that occurred between political enemies.</p>
+      </div>
+    </article>
+
+    <!-- Diorama 2 -->
+    <article class="card reverse">
+      <div class="media">
+        <img class="primary" src="diorama-project/media/kitay.jpg" alt="Diorama for Ki'tay D. Davidson." />
+      </div>
+      <div class="body">
+        <p class="kicker">For Ki&rsquo;tay D. Davidson, Who Loves Us</p>
+        <h3>For Ki&rsquo;tay D. Davidson, Who Loves Us</h3>
+        <p class="author">Talila A. Lewis</p>
+        <p>Where Singer and Johnson&rsquo;s story exposes the contradictions disabled people may encounter within professional, collaborative relationships, Lewis&rsquo;s (2020) eulogy for Ki&rsquo;tay D. Davidson highlights the remarkable harmony and consistency he displayed during his life. Lewis praises Ki&rsquo;tay&rsquo;s wisdom and kindness for everyone in the world, comparing him to Martin Luther King Jr., the Dalai Lama, and Paulo Coelho. She deduces a revolutionary spirituality from Ki&rsquo;tay&rsquo;s life and encourages the audience to seek hope and love. Her narrative resolves Johnson&rsquo;s contradictory entanglement with Singer.</p>
+        <blockquote>
+          &ldquo;&hellip;it was Ki&rsquo;tay&rsquo;s ability to sit with and actively love oppressors and those who were violent toward him and marginalized communities&mdash;most often solely because they do not adhere to that which has been deemed &lsquo;normal&rsquo;&mdash;that truly set him apart. He could breathe life and love into even those people within mere moments of making their acquaintance. This is what makes him special&mdash;reminiscent of what some here may call a prophet; others, a wise man; others still, a light or sage.&rdquo;
+          <cite>&mdash; Lewis (2020), in Wong&rsquo;s <em>Disability Visibility</em>, p.&nbsp;29</cite>
+        </blockquote>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= BECOMING ================= -->
+  <section class="theme" id="becoming" style="--tcol:var(--becoming)">
+    <div class="theme-head">
+      <div class="num">Part Two</div>
+      <h2>Becoming</h2>
+    </div>
+
+    <!-- Diorama 3 -->
+    <article class="card">
+      <div class="media">
+        <img class="primary" src="diorama-project/media/thornton.jpg" alt="Diorama for Ricardo T. Thornton Sr." />
+      </div>
+      <div class="body">
+        <p class="kicker">We Can&rsquo;t Go Back</p>
+        <h3>We Can&rsquo;t Go Back</h3>
+        <p class="author">Ricardo T. Thornton Sr.</p>
+        <p>Ricardo T. Thornton Sr. gave testimony to the United States Senate Health, Education, Labor and Pensions (HELP) Committee in 2012. At the time, the chairman of the committee was Tom Harkin, credited as the primary Senate architect of the Americans with Disabilities Act of 1990. Senator Harkin&rsquo;s brother is deaf.</p>
+        <p>Thornton&rsquo;s (2012) original testimony begins, &ldquo;Good day, Senator Harkin and members of the Senate HELP Committee.&rdquo; Wong&rsquo;s (2020) edit in <em>Disability Visibility</em> removes the acknowledgement to Harkin and the committee. This slight edit, made in favor of centering disabled voices, mystifies the history and essential context of Thornton&rsquo;s testimony as much as a textbook that excludes Thornton entirely.</p>
+        <p>The point of this class is collaboration. Thornton&rsquo;s story illustrates how a white man with a deaf brother collaborated with a formerly institutionalized Black man to uphold ADA enforcement of the 1999 Supreme Court <em>Olmstead</em> decision to end the segregation of disabled people. All members of the HELP Committee in 2012 were white, including well-known figures such as John McCain, Lisa Murkowski, Bernie Sanders, and Rand Paul.</p>
+      </div>
+    </article>
+
+    <!-- Diorama 4 -->
+    <article class="card reverse">
+      <div class="media">
+        <video class="primary" controls preload="metadata">
+          <source src="diorama-project/media/haben-girma.mp4" type="video/mp4" />
+          Your browser does not support embedded video. <a href="diorama-project/media/haben-girma.mp4">Watch the clip</a>.
+        </video>
+      </div>
+      <div class="body">
+        <p class="kicker">Guide Dogs Don&rsquo;t Lead Blind People. We Wander as One.</p>
+        <h3>Guide Dogs Don&rsquo;t Lead Blind People. We Wander as One.</h3>
+        <p class="author">Haben Girma</p>
+        <p>Haben Girma is the first Deafblind person to graduate from Harvard Law School. Her narrative about guide dogs corrects a long-standing ableist misconception that blind people are simply &ldquo;led&rdquo; by their guide dogs. Her story shows how the relationship between people and service animals is genuinely complex &mdash; a partnership rather than a one-way dependency. This visual diorama illustrates an analogy for that story.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= DOING ================= -->
+  <section class="theme" id="doing" style="--tcol:var(--doing)">
+    <div class="theme-head">
+      <div class="num">Part Three</div>
+      <h2>Doing</h2>
+    </div>
+
+    <!-- Diorama 5 -->
+    <article class="card">
+      <div class="media">
+        <div class="carousel" data-carousel>
+          <div class="slides">
+            <figure class="slide"><img src="diorama-project/media/maddy-diorama.jpg" alt="Watercolor diorama: two people kneel at a pottery wheel shaping a single pot, their minds merging into one rainbow plume of color." /></figure>
+            <figure class="slide"><img src="diorama-project/media/maddy-photo.png" alt="Photograph of A. H. Reaume and Maddy smiling together outdoors." /><figcaption>A. H. Reaume &amp; Maddy</figcaption></figure>
+          </div>
+          <button class="cbtn prev" aria-label="Previous image" type="button">&lsaquo;</button>
+          <button class="cbtn next" aria-label="Next image" type="button">&rsaquo;</button>
+          <div class="dots" aria-label="Image navigation"></div>
+        </div>
+      </div>
+      <div class="body">
+        <p class="kicker">Why My Novel Is Dedicated to My Disabled Friend Maddy</p>
+        <h3>Why My Novel Is Dedicated to My Disabled Friend Maddy</h3>
+        <p class="author">A. H. Reaume</p>
+        <p>A. H. Reaume is an author who suffered a traumatic brain injury that made it difficult for her to continue writing. She met another woman, Maddy, who also lived with a traumatic brain injury. Reaume hired Maddy to help her complete the book, and the two were able to finish it <em>because</em> of their disabilities, not in spite of them.</p>
+        <p>The social model of disability suggests that society is the disabling condition, not biology. Reaume and Maddy are a living example of that argument, demonstrating how disabled friendships generate collaborative fruits. I&rsquo;ve represented this visually with the analogy of two minds pouring together into a single creative act.</p>
+      </div>
+    </article>
+
+    <!-- Diorama 6 -->
+    <article class="card reverse">
+      <div class="media">
+        <div class="carousel" data-carousel>
+          <div class="slides">
+            <figure class="slide"><img src="diorama-project/media/reyma-diorama.png" alt="Three-panel comic titled Lost Cause: Reyma McCoy McDeid stands confidently in a small boat, bails water overboard, and sails past faceless gray figures toward the horizon." /></figure>
+            <figure class="slide"><img src="diorama-project/media/reyma.webp" alt="Portrait photograph of Reyma McCoy McDeid." /><figcaption>Reyma McCoy McDeid</figcaption></figure>
+          </div>
+          <button class="cbtn prev" aria-label="Previous image" type="button">&lsaquo;</button>
+          <button class="cbtn next" aria-label="Next image" type="button">&rsaquo;</button>
+          <div class="dots" aria-label="Image navigation"></div>
+        </div>
+      </div>
+      <div class="body">
+        <p class="kicker">Lost Cause</p>
+        <h3>Lost Cause</h3>
+        <p class="author">Reyma McCoy McDeid</p>
+        <p>In &ldquo;Lost Cause,&rdquo; McCoy McDeid (2020) describes her childhood experience of being called a &ldquo;lost cause&rdquo; by the people who parented her. Throughout her life she journeys through a series of so-called &ldquo;lost causes&rdquo; until she arrives at the Central Iowa Center for Independent Living (CICIL). She is the first person with developmental disabilities to sit on the National Council on Independent Living&rsquo;s executive board, and she credits her success to her neurodiversity.</p>
+        <p>According to ProPublica&rsquo;s nonprofit database (2016), McCoy McDeid served as executive director of CICIL beginning in 2016 and held that position until 2019.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= CONNECTING ================= -->
+  <section class="theme" id="connecting" style="--tcol:var(--connecting)">
+    <div class="theme-head">
+      <div class="num">Part Four</div>
+      <h2>Connecting</h2>
+    </div>
+
+    <!-- Diorama 7 -->
+    <article class="card">
+      <div class="media">
+        <div class="carousel" data-carousel>
+          <div class="slides">
+            <figure class="slide"><img src="diorama-project/media/benjamin-lay.png" alt="Diorama: Benjamin Lay, a dwarf man, stands with his wife and their baby in a candlelit parlor, holding a copy of the book The Fearless Benjamin Lay." /><figcaption>Benjamin Lay &amp; the book</figcaption></figure>
+            <figure class="slide"><img src="diorama-project/media/benlay-heroics.png" alt="Diorama scene: Benjamin Lay brandishes a book and splashes red fluid over a row of seated Quaker slave owners." /><figcaption>Lay confronts the slave owners</figcaption></figure>
+          </div>
+          <button class="cbtn prev" aria-label="Previous image" type="button">&lsaquo;</button>
+          <button class="cbtn next" aria-label="Next image" type="button">&rsaquo;</button>
+          <div class="dots" aria-label="Image navigation"></div>
+        </div>
+      </div>
+      <div class="body">
+        <p class="kicker">The Fearless Benjamin Lay: Activist, Abolitionist, Dwarf Person</p>
+        <h3>The Fearless Benjamin Lay</h3>
+        <p class="author">Eugene Grant</p>
+        <p>Eugene Grant&rsquo;s narrative of &ldquo;The Fearless Benjamin Lay&rdquo; highlights Lay&rsquo;s revolutionary spirit. Grant reports that Benjamin Lay once disrupted a group of slave owners by spilling red fluid from a bladder all over them; the diorama demonstrates these heroics.</p>
+        <p>Grant describes how dwarf people are important connectors in human ecology: because Benjamin Lay understood oppression, he was able to build a bridge between himself and enslaved persons. Grant also insists that historians should fearlessly recount dwarfism, because it is an essential element of Lay&rsquo;s story &mdash; erasing it would erase Lay himself.</p>
+        <p>May The Fearless Benjamin Lay never be forgotten.</p>
+      </div>
+    </article>
+
+    <!-- Diorama 8 -->
+    <article class="card reverse">
+      <div class="media">
+        <img class="primary" src="diorama-project/media/jamison-hill.jpg" alt="Photograph of Jamison Hill and his girlfriend." />
+      </div>
+      <div class="body">
+        <p class="kicker">Love Means Never Having to Say&hellip;Anything</p>
+        <h3>Love Means Never Having to Say&hellip;Anything</h3>
+        <p class="author">Jamison Hill</p>
+        <p>One of the central narratives of Wong&rsquo;s anthology is that disability is not naturally disabling &mdash; disability is a social product. Jamison Hill demonstrates this concept through romance. Once an avid bodybuilder, Hill falls ill with a rare disease and becomes bedridden and unable to speak. He meets a woman who shares his condition, and they fall in love.</p>
+        <p>She lives thousands of miles away, and they can rarely see each other &mdash; only when their health allows. The story demonstrates that disability does not separate these two individuals; rather, it connects them to each other.</p>
+        <p class="credit">Image courtesy of Jamison Hill&rsquo;s blog: <a href="https://jamisonwrites.com/2021/05/31/when-a-relationship-goes-viral/" target="_blank" rel="noopener">When a Relationship Goes Viral</a>.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= REFERENCES ================= -->
+  <section class="refs" id="references">
+    <h2>References</h2>
+    <p class="note">APA (7th ed.). Text sources and image credits are listed together; bracketed entries (e.g.&nbsp;[Photograph]) are the credits for photos and the book cover.</p>
+    <ul class="ref-list">
+      <li>Girma, H. (2020). Guide dogs don&rsquo;t lead blind people. We wander as one. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books.</li>
+      <li>Grant, E. (2020). The fearless Benjamin Lay: Activist, abolitionist, dwarf person. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books.</li>
+      <li>Hill, J. (2020). Love means never having to say&hellip;anything. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books.</li>
+      <li>Hill, J. (2021, May 31). <em>When a relationship goes viral</em>. Jamison Writes. <a href="https://jamisonwrites.com/2021/05/31/when-a-relationship-goes-viral/" target="_blank" rel="noopener">https://jamisonwrites.com/2021/05/31/when-a-relationship-goes-viral/</a></li>
+      <li>Johnson, H. M. (2020). Unspeakable conversations. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books. (Original work published 2003)</li>
+      <li>Lewis, T. A. (2020). For Ki&rsquo;tay D. Davidson, who loves us. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em> (pp. 27&ndash;30). Vintage Books.</li>
+      <li>McCoy McDeid, R. (2020). Lost cause. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em> (p. 124). Vintage Books.</li>
+      <li>Reaume, A. H. (2020). Why my novel is dedicated to my disabled friend Maddy. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books.</li>
+    <li>[Photograph of A. H. Reaume and Madeline Sloan]. (2019). In <em>Interdependence as disabled poetics and praxis: Or why my novel is dedicated to my disabled friend Maddy</em>. Open Book. <a href="https://open-book.ca/Columnists/Interdependence-as-Disabled-Poetics-and-Praxis-Or-Why-My-Novel-is-Dedicated-to-My-Disabled-Friend-Maddy" target="_blank" rel="noopener">https://open-book.ca/Columnists/Interdependence-as-Disabled-Poetics-and-Praxis-Or-Why-My-Novel-is-Dedicated-to-My-Disabled-Friend-Maddy</a></li>
+      <li>[Photograph of Harriet McBryde Johnson]. (n.d.). In <em>Harriet McBryde Johnson</em>. Wikipedia. <a href="https://en.wikipedia.org/wiki/Harriet_McBryde_Johnson" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Harriet_McBryde_Johnson</a></li>
+      <li>[Photograph of Reyma McCoy McDeid]. (2020). In <em>Missing step</em>. Disability Visibility Project. <a href="https://disabilityvisibilityproject.com/2020/07/19/missing-step/" target="_blank" rel="noopener">https://disabilityvisibilityproject.com/2020/07/19/missing-step/</a></li>
+      <li>ProPublica. (2016). <em>Central Iowa Center for Independent Living</em> [Nonprofit explorer data]. <a href="https://projects.propublica.org/nonprofits/organizations/421365498" target="_blank" rel="noopener">https://projects.propublica.org/nonprofits/organizations/421365498</a></li>
+      <li>Singer, P. (1991). <em>Animal liberation</em> (2nd ed.) [Book cover photograph]. Thorsons. (Cover image retrieved via AbeBooks)</li>
+      <li>Thornton, R. T., Sr. (2020). We can&rsquo;t go back. In A. Wong (Ed.), <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books.</li>
+    <li>Thornton, R. T., Sr. (2012). <em>Testimony before the Senate Health, Education, Labor and Pensions Committee</em>. United States Senate. <a href="https://www.help.senate.gov/imo/media/doc/Thornton.pdf" target="_blank" rel="noopener">https://www.help.senate.gov/imo/media/doc/Thornton.pdf</a></li>
+      <li>Wong, A. (Ed.). (2020). <em>Disability visibility: First-person stories from the twenty-first century</em>. Vintage Books.</li>
+    </ul>
+  </section>
+
+</main>
+
+
+
+<script>
+  document.querySelectorAll('[data-carousel]').forEach(function (car) {
+    var track = car.querySelector('.slides');
+    var slides = car.querySelectorAll('.slide');
+    var dotsWrap = car.querySelector('.dots');
+    var n = slides.length;
+
+    for (var i = 0; i < n; i++) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Go to image ' + (i + 1));
+      (function (idx) {
+        b.addEventListener('click', function () {
+          track.scrollTo({ left: track.clientWidth * idx, behavior: 'smooth' });
+        });
+      })(i);
+      dotsWrap.appendChild(b);
+    }
+    var dots = dotsWrap.querySelectorAll('button');
+
+    function current() {
+      return Math.max(0, Math.min(n - 1, Math.round(track.scrollLeft / track.clientWidth)));
+    }
+    function fit() {
+      var s = slides[current()];
+      if (s && s.offsetHeight) car.style.height = s.offsetHeight + 'px';
+    }
+    function update() {
+      var idx = current();
+      for (var i = 0; i < dots.length; i++) dots[i].classList.toggle('active', i === idx);
+      fit();
+    }
+
+    track.addEventListener('scroll', function () { window.requestAnimationFrame(update); });
+    window.addEventListener('resize', function () { window.requestAnimationFrame(update); });
+    car.querySelector('.prev').addEventListener('click', function () {
+      track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
+    });
+    car.querySelector('.next').addEventListener('click', function () {
+      track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+    });
+
+    // recompute once media has real dimensions
+    car.querySelectorAll('img').forEach(function (im) {
+      if (!im.complete) im.addEventListener('load', update);
+    });
+    car.querySelectorAll('video').forEach(function (v) {
+      v.addEventListener('loadedmetadata', update);
+    });
+
+    update();
+  });
+  window.addEventListener('load', function () {
+    document.querySelectorAll('[data-carousel] .slides').forEach(function (t) {
+      t.dispatchEvent(new Event('scroll'));
+    });
+  });
+</script>
+
+
+</div>
+<footer>&copy; Gabe Esquivel · <a href="mailto:gaboesquivel@gmail.com">gaboesquivel@gmail.com</a> · Taipei, Taiwan</footer>
+</div></div></body></html>
