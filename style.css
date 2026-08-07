@@ -124,3 +124,25 @@ table.compare tbody th{background:#f5f1e8;font-weight:600;white-space:nowrap}
 /* uniform menu typography */
 .allnav .nav, .allnav .nav a{font-family:var(--sans);font-size:.9rem}
 .allnav .nav h4, .allnav .nav h4 a{font-family:var(--sans);font-size:.68rem}
+
+/* how-to steps + copy blocks (LLM Audiobook Prompts) */
+.steps{list-style:none;counter-reset:s;padding:0;margin:1.6rem 0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 0 3rem;margin:0 0 1.4rem}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:.05rem;width:2rem;height:2rem;
+  border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--sans);font-weight:700;
+  font-size:.9rem;display:flex;align-items:center;justify-content:center}
+.steps h4{margin:.15rem 0 .35rem;font-size:1.06rem}
+.steps p{margin:.3rem 0}
+.copyblock{position:relative;margin:1rem 0}
+.copyblock pre{background:#fff;border:1px solid var(--line);border-radius:10px;padding:1rem 1rem .9rem;
+  overflow-x:auto;font-family:var(--mono,"SFMono-Regular",Menlo,Consolas,monospace);font-size:.85rem;
+  line-height:1.55;margin:0;white-space:pre-wrap;word-break:break-word}
+.copyblock .copybtn{position:absolute;top:.5rem;right:.5rem;font-family:var(--sans);font-size:.75rem;
+  background:var(--ink);color:var(--bg);border:0;border-radius:6px;padding:.35rem .7rem;cursor:pointer}
+.copyblock .copybtn:hover{filter:brightness(1.3)}
+.copyblock .copybtn.done{background:var(--accent2,#4a7a5f)}
+details.reveal{border:1px solid var(--line);border-radius:10px;background:#fff;padding:.7rem 1rem;margin:.8rem 0}
+details.reveal summary{cursor:pointer;font-family:var(--sans);font-size:.92rem;font-weight:600}
+details.reveal[open] summary{margin-bottom:.6rem}
+.callout{background:#fbf6ea;border:1px solid #eadfc4;border-left:4px solid var(--accent);
+  border-radius:8px;padding:.8rem 1rem;margin:1.2rem 0;font-size:.95rem}
