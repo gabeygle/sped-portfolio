@@ -120,3 +120,7 @@ table.compare tbody th{background:#f5f1e8;font-weight:600;white-space:nowrap}
   font-size:.9rem;color:#6b5a1e;margin:0 0 1.4rem;font-family:var(--sans)}
 .forgraders{margin-top:2.5rem;padding-top:1rem;border-top:1px dashed var(--line)}
 .forgraders h3{font-size:.95rem;color:var(--muted)}
+
+/* uniform menu typography */
+.allnav .nav, .allnav .nav a{font-family:var(--sans);font-size:.9rem}
+.allnav .nav h4, .allnav .nav h4 a{font-family:var(--sans);font-size:.68rem}
