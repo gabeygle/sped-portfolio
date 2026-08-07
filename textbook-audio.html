@@ -142,24 +142,14 @@ done
 echo ""
 echo "Done. The .m4a files are in this folder. You can close this window."</pre></div>
 
-<details class="reveal"><summary>Why there is no token limit &mdash; the question everyone asks</summary>
+<details class="reveal"><summary>Why local</summary>
 <p>A 400-page book would blow past any model's context window if you fed it through the model.
 This method never does. The chapter text is extracted to a file on disk, and your computer's
 speech engine reads that file directly. <span class="cu">The words never pass through the language
 model at all</span>, so book length is irrelevant. Cloud TTS APIs do have per-request character
 caps &mdash; which is exactly why the local approach handles long books better than a paid one.</p></details>
 
-<details class="reveal"><summary>Not on a Mac?</summary>
-<p>The method is identical; only the engine changes. Windows has SAPI voices reachable from
-PowerShell; Linux has <code>espeak-ng</code> or Piper (Piper sounds markedly better). Ask your
-assistant to write the equivalent one-click script for your system, and keep everything else the
-same.</p></details>
 
-<details class="reveal"><summary>What I'd do differently</summary>
-<p>Test the voice on a single page before generating twelve chapters. I burned an hour of
-narration on a voice I couldn't tolerate. Also: the extraction is only as good as the PDF &mdash;
-scanned books need OCR first, and tables and figures narrate as gibberish, so tell the assistant
-to drop them.</p></details>
 
 <h3>The actual conversation</h3>
 <p>Here is the real exchange that produced all of this, lightly trimmed. I am publishing it
