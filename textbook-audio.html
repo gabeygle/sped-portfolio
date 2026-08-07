@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LLM Audiobook Prompts · Gabe Esquivel</title>
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head><body><header class="site-head">
 <a class="wordmark" href="index.html">Debate &amp; Autism</a>
 <nav class="top"><a href="ebps-fads.html">Start Here</a><a href="for-parents.html">For Parents</a><a href="for-educators.html">For Educators</a><a href="controversies.html">Controversies</a><a href="about.html">About</a></nav>
@@ -161,6 +161,102 @@ narration on a voice I couldn't tolerate. Also: the extraction is only as good a
 scanned books need OCR first, and tables and figures narrate as gibberish, so tell the assistant
 to drop them.</p></details>
 
+<h3>The actual conversation</h3>
+<p>Here is the real exchange that produced all of this, lightly trimmed. I am publishing it
+because <mark>the interesting part is not the output, it is the reasoning</mark> &mdash; where
+the assistant hit a wall, what it refused to fake, and where my own instinct was wrong. Annotated
+notes in the margin mark the turns that mattered.</p>
+
+<p><button class="copybtn" id="toggleAnnot" style="position:static;margin:0 0 .8rem">Hide annotations</button></p>
+
+<div class="transcript">
+
+<div class="turn me"><div class="who2">Gabe</div><div class="bub">
+<p>it's done. when you have finished downloading everything please do a couple of things:</p>
+<p>1) consider a way to automate creating audio-podcasts of each of the readings. perhaps
+notebookLM is an option? its free and I can sign in. you can possible drive with the browser.
+otherwise, consider other ways to do it with an API. I'd be willing to get an account with
+elevenlabs or another text to audio service.</p>
+</div></div>
+<div class="annot"><b>Turn 1.</b> Note what this asks for: not &ldquo;build X,&rdquo; but
+&ldquo;consider a way.&rdquo; It names three candidate approaches and signals a budget. That
+framing is what makes the next turn possible.</div>
+
+<div class="turn ai"><div class="who2">Claude</div><div class="bub">
+<p>Now your audio request. Let me test whether I can do faithful text-to-speech right here in the
+sandbox for free, before recommending a workflow.</p>
+<span class="toolrun">Ran a command</span><span class="toolrun">Ran a command</span>
+<p>edge-tts is blocked &mdash; the sandbox can't reach Microsoft's speech servers. Let me probe
+what network and offline options are available, since that determines the whole workflow.</p>
+<span class="toolrun">Ran a command</span><span class="toolrun">Ran a command</span>
+</div></div>
+<div class="annot"><b>Turn 2 &mdash; the pivotal one.</b> It tested before recommending, and the
+test <em>failed</em>. Reporting that failure honestly is what redirected the project onto my Mac,
+which turned out to be the right place. An assistant that guessed here would have produced a
+confident, broken plan.</div>
+
+<div class="turn ai"><div class="who2">Claude</div><div class="bub">
+<p><b>Feasibility:</b> The faithful-narration part is very doable, but not from inside my sandbox
+&mdash; its network is locked down to package installs only. It can't reach any TTS service
+(Microsoft, ElevenLabs, OpenAI all blocked) and has no offline voice engine. So the actual audio
+synthesis has to run on your Mac. The good news: your Mac already has a high-quality, offline,
+free TTS engine built in &mdash; the macOS <code>say</code> command &mdash; and it reads text
+verbatim, which is exactly the &ldquo;extremely faithful&rdquo; narration you want (unlike
+NotebookLM, which paraphrases into a chat-show and would not be faithful).</p>
+<p><b>The workflow I'd set up:</b> I extract each textbook chapter's text from the PDF and clean
+out page-number/footer noise, saving one .txt per chapter. I write a single double-clickable
+script into that folder. You double-click it once; macOS narrates every chapter to an .m4a right
+next to the text. No typing, no Terminal commands, no account.</p>
+<p><b>Token limits &mdash; your specific question:</b> No. The chapter text is extracted on disk
+and synthesized on your Mac; it never passes through the language model, so there's no
+context/token limit on length. The only &ldquo;limits&rdquo; that exist for TTS are per-request
+character caps on cloud APIs &mdash; irrelevant here. This is why the local approach is actually
+better for a 400-page book than any API.</p>
+<p><b>Quality trade-off &mdash; one decision for you:</b> macOS <code>say</code> (free, offline,
+faithful) vs. a paid cloud voice (ElevenLabs/OpenAI) that sounds more natural but costs money and
+would need your API key in a local script.</p>
+</div></div>
+<div class="annot"><b>Turn 3.</b> The NotebookLM verdict is the one I would have gotten wrong on
+my own. It is free and it sounds great &mdash; but it makes a <em>show about</em> your document.
+For studying, <span class="cu">verbatim beats polished</span>. Note also that it ended by handing
+the money decision back to me instead of quietly spending it.</div>
+
+<div class="turn ai"><div class="who2">Claude</div><div class="bub">
+<p>Audio sample is ready to test. In the <code>Textbook_Audio/</code> folder there's
+<code>Chapter_01.txt</code> (faithful, cleaned Chapter 1 text &mdash; 8,368 words, ~56 min) and
+<code>Narrate_Textbook.command</code>. Double-click the .command file; macOS will narrate every
+<code>Chapter_*.txt</code> in that folder into matching .m4a files using the free built-in voice.
+If macOS warns about an unidentified developer, right-click it &rarr; Open the first time. Once
+you like the result, I'll extract all 12 chapters and you re-run it for the whole book.</p>
+</div></div>
+<div class="annot"><b>Turn 4.</b> One chapter first, not twelve. Cheap to check, cheap to throw
+away &mdash; which mattered, because I was about to throw it away.</div>
+
+<div class="turn me"><div class="who2">Gabe</div><div class="bub">
+<p>samantha's voice is going to put me to sleep for the voice textbook. I'm going to take a look
+at the other voices and lyk which voice I like so we can voice generate the rest of the assigned
+readings and textbook chapters 1&ndash;4.</p>
+</div></div>
+<div class="annot"><b>Turn 5.</b> The only thing no assistant could have decided for me. Voice
+tolerance is entirely subjective and it determines whether twelve hours of audio ever gets
+listened to.</div>
+
+<div class="turn ai"><div class="who2">Claude</div><div class="bub">
+<p>Voice is now Zoe (Premium) in the script, and I extracted Chapters 1&ndash;4. To regenerate in
+Zoe: first download the voice (System Settings &rarr; Accessibility &rarr; Spoken Content &rarr;
+System Voice &rarr; Manage Voices &rarr; English US &rarr; Zoe (Premium)), delete the old
+<code>Chapter_01.m4a</code>, then double-click the script &mdash; it'll narrate all four chapters.
+Once you confirm Zoe sounds right, I'll extract the rest of the textbook and the assigned-reading
+PDFs the same way.</p>
+</div></div>
+<div class="annot"><b>Turn 6.</b> One line changed in the script; everything else stayed. That is
+the payoff of putting the voice in a labeled variable at the top instead of burying it.</div>
+
+</div>
+
+<p class="ref">Transcript lightly trimmed for length and to remove an unrelated request about
+coursework. Tool-call details are collapsed to <span class="toolrun">Ran a command</span> markers.</p>
+
 <h3>The result</h3>
 <p>Twelve chapters, listenable on my phone, made from a book with no audiobook, at no cost. I am
 including it on this site because it is the clearest example of a principle this course kept
@@ -174,7 +270,13 @@ professionals</em> (9th ed.). Pearson. Narrated with the macOS <code>say</code> 
 (voice: Zoe Premium) for personal study use; audio not distributed.</p>
 
 <script>
+var tg=document.getElementById('toggleAnnot');
+if(tg){tg.addEventListener('click',function(){
+  var hid=document.body.classList.toggle('noannot');
+  document.querySelectorAll('.annot').forEach(function(a){a.style.display=hid?'none':'';});
+  tg.textContent=hid?'Show annotations':'Hide annotations';});}
 document.querySelectorAll('.copybtn').forEach(function(b){
+  if(b.id==='toggleAnnot')return;
   b.addEventListener('click', function(){
     var el=document.getElementById(b.dataset.target);
     var txt=el.innerText;
