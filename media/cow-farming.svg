@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" width="640" height="420" role="img" aria-label="A line-drawn cow in a field with a sign reading farming in progress">
+<rect width="640" height="420" fill="#f2efe6"/>
+<ellipse cx="320" cy="360" rx="270" ry="34" fill="#dfe8d4"/>
+<!-- cow body -->
+<g stroke="#2c2c2c" stroke-width="4" fill="#ffffff" stroke-linejoin="round" stroke-linecap="round">
+<ellipse cx="320" cy="250" rx="120" ry="72"/>
+<!-- legs -->
+<line x1="255" y1="310" x2="255" y2="360"/><line x1="290" y1="318" x2="290" y2="360"/>
+<line x1="352" y1="318" x2="352" y2="360"/><line x1="388" y1="310" x2="388" y2="360"/>
+<!-- head -->
+<ellipse cx="435" cy="205" rx="52" ry="42"/>
+<ellipse cx="447" cy="222" rx="30" ry="20" fill="#f3c9c4"/>
+<circle cx="440" cy="219" r="3.5" fill="#2c2c2c"/><circle cx="456" cy="221" r="3.5" fill="#2c2c2c"/>
+<circle cx="424" cy="192" r="4.5" fill="#2c2c2c"/><circle cx="450" cy="190" r="4.5" fill="#2c2c2c"/>
+<!-- ears + horns -->
+<path d="M400 178 q-16 -8 -22 4 q10 10 24 6z"/><path d="M462 172 q14 -10 22 0 q-8 12 -22 8z"/>
+<path d="M413 168 q-4 -16 8 -20"/><path d="M452 164 q6 -16 -6 -20"/>
+<!-- spots -->
+<path d="M270 220 q30 -18 48 4 q-6 26 -34 22 q-22 -6 -14 -26z" fill="#5b544e" stroke="none"/>
+<path d="M340 275 q26 -10 38 8 q-8 20 -30 14 q-16 -6 -8 -22z" fill="#5b544e" stroke="none"/>
+<!-- tail -->
+<path d="M200 240 q-24 10 -18 40" fill="none"/><circle cx="182" cy="284" r="6" fill="#5b544e" stroke="none"/>
+</g>
+<!-- sign -->
+<g stroke="#2c2c2c" stroke-width="4" fill="#f7e6b0" stroke-linejoin="round">
+<line x1="120" y1="360" x2="120" y2="250" />
+<rect x="42" y="200" width="156" height="64" rx="6"/>
+</g>
+<text x="120" y="227" font-family="Courier New,monospace" font-size="16" font-weight="700" text-anchor="middle" fill="#2c2c2c">FARMING</text>
+<text x="120" y="249" font-family="Courier New,monospace" font-size="16" font-weight="700" text-anchor="middle" fill="#2c2c2c">IN PROGRESS</text>
+<!-- grass tufts -->
+<g stroke="#7a9a68" stroke-width="3" stroke-linecap="round" fill="none">
+<path d="M90 352 q3 -12 0 -16 M96 352 q0 -10 5 -14 M84 352 q-2 -10 -6 -12"/>
+<path d="M540 348 q3 -12 0 -16 M546 348 q0 -10 5 -14 M534 348 q-2 -10 -6 -12"/>
+</g>
+</svg>

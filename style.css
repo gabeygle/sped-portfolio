@@ -87,3 +87,20 @@ background:#fff}
 .postlist li:last-child{border-bottom:0}
 .postlist h3{margin:0 0 .25rem;font-size:1.2rem}
 .postmeta{font-size:.85rem;color:var(--muted);margin:.2rem 0 .5rem}
+
+/* comparison table (autism-characteristics) */
+table.compare{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.93rem}
+table.compare th,table.compare td{border:1px solid #d8d3c8;padding:.6rem .7rem;text-align:left;vertical-align:top}
+table.compare thead th{background:#f0ede6;font-weight:700}
+table.compare tbody th{background:#f7f5f0;font-weight:600;white-space:nowrap}
+@media(max-width:640px){table.compare{font-size:.85rem}table.compare tbody th{white-space:normal}}
+
+/* under-construction banner */
+.construction{background:#fdf3d7;border:1px solid #e8d9a0;border-radius:8px;padding:.7rem 1rem;
+  font-size:.9rem;color:#6b5a1e;margin:0 0 1.4rem}
+/* for-graders block */
+.forgraders{margin-top:2.5rem;padding-top:1rem;border-top:1px dashed var(--line)}
+.forgraders h3{font-size:.95rem;color:var(--muted)}
+/* nav section headers that link */
+.nav h4 a{color:inherit;text-decoration:none}
+.nav h4 a:hover{text-decoration:underline}
