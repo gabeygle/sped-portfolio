@@ -168,3 +168,36 @@ details.reveal[open] summary{margin-bottom:.6rem}
 .annot b{color:var(--accent)}
 @media(max-width:640px){.turn{flex-direction:column;gap:.2rem}.turn .who2{flex:none;padding-top:0}
 .annot{margin-left:0}}
+
+/* debate work + card anatomy */
+.debatework{border-top:1px solid var(--line);margin-top:1rem;padding-top:.4rem}
+.dtopic{margin:1.8rem 0}
+.dtopic .res{font-size:.92rem;font-style:italic;color:var(--muted);border-left:3px solid var(--line);
+  padding:.5rem .9rem;margin:.5rem 0 .8rem;background:#fff;border-radius:0 6px 6px 0}
+.dfile{display:inline-block;font-family:var(--sans);font-size:.9rem;background:var(--ink);color:var(--bg);
+  padding:.5rem 1rem;border-radius:7px;margin:.4rem .4rem .2rem 0}
+.dfile:hover{text-decoration:none;filter:brightness(1.25)}
+.dfile small{opacity:.75;font-weight:400}
+/* annotated demo card */
+.democard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;margin:1.2rem 0;
+  font-family:var(--serif);font-size:.97rem;line-height:1.75}
+.democard .dtag{font-weight:800;display:block;margin-bottom:.5rem}
+.democard .dcite{font-size:.88rem;color:#3a362e;margin:0 0 .6rem}
+.democard .dcite b{font-size:.95rem}
+.anno{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;display:block;margin:.1rem 0 .2rem}
+.legend2{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.6rem 0 0}
+.legend2 span{margin-right:1rem;white-space:nowrap}
+.qa{margin:1.4rem 0}
+.qa dt{font-weight:700;margin:1.2rem 0 .3rem;font-size:1.05rem}
+.qa dd{margin:0 0 .5rem}
+
+/* debate samples heading + Q&A boxes */
+h3.dwork-h{font-weight:800;font-size:1.4rem}
+.democard .dtag{font-weight:800}
+.qabox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:1rem 1.2rem;margin:.9rem 0}
+.qabox .qq{font-family:var(--sans);font-weight:700;font-size:1rem;margin:0 0 .5rem;color:var(--accent)}
+.qabox .qaa{margin:0}
+.qabox .qaa p{margin:0}
+.qabox ol{margin:.5rem 0 0;padding-left:1.3rem}
+.qabox ol li{margin:.3rem 0}
