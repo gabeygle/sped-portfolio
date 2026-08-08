@@ -36,12 +36,54 @@ mark{background:var(--hl);padding:.04rem .12rem}
 .path h3 a:hover{text-decoration:underline}
 .path p{font-size:.95rem;color:#3f3b33;margin:0}
 .path .label{color:var(--muted)}
+.navgroup{display:flex;align-items:baseline;gap:1.6rem}
+.allnav{position:relative;font-family:var(--sans);font-size:.92rem}
+.allnav summary{cursor:pointer;color:var(--muted);list-style:none;user-select:none}
+.allnav summary::-webkit-details-marker{display:none}
+.allnav summary::after{content:" \25BE";font-size:.75em}
+.allnav[open] summary{color:var(--ink)}
+.allnav .nav{position:absolute;right:0;top:1.9rem;z-index:50;background:#fff;
+  border:1px solid var(--soft);border-radius:10px;box-shadow:0 10px 30px rgba(25,25,25,.12);
+  padding:1rem 1.2rem;width:280px;max-height:70vh;overflow-y:auto}
+.allnav .nav h4{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:.68rem;margin:1rem 0 .3rem;font-family:var(--sans);font-weight:600}
+.allnav .nav h4:first-child{margin-top:0}
+.allnav .nav h4 a{color:inherit;margin-left:0;font-size:.68rem}
+.allnav .nav a{display:block;color:var(--ink);padding:.22rem .4rem;border-radius:6px;font-size:.9rem;margin-left:0;text-decoration:none}
+.allnav .nav a:hover{background:var(--paper)}
 footer{max-width:1020px;margin:0 auto;padding:2.5rem 2rem;color:var(--muted);font-size:.88rem;font-family:var(--sans)}
 footer a{color:var(--muted)}
 </style></head><body>
 <header>
   <a class="wordmark" href="index.html">Debate &amp; Autism</a>
+  <div class="navgroup">
   <nav><a href="ebps-fads.html">Start Here</a><a href="for-parents.html">For Parents</a><a href="for-educators.html">For Educators</a><a href="controversies.html">Controversies</a><a href="about.html">About</a></nav>
+  <details class="allnav"><summary>More</summary>
+<nav class="nav">
+<a href="index.html">Home</a>
+<h4><a href="research.html">Research</a></h4>
+<a href="disproportionality.html">Disproportionality in SPED</a>
+<a href="ebps-fads.html">EBPs, Fads &amp; Pseudoscience</a>
+<a href="ebp-academics.html">EBPs for Academics</a>
+<a href="ebp-social.html">EBPs for Social Outcomes</a>
+<h4><a href="book-reviews.html">Book Reviews</a></h4>
+<a href="diorama.html">Disability Visibility</a>
+<a href="autism-timeline.html">NeuroTribes</a>
+<a href="blog-faith-and-autism.html">God Loves the Autistic Mind</a>
+<h4><a href="toolbox.html">Toolbox</a></h4>
+<a href="how-to-read-debate-files.html">How to Read Debate Files</a>
+<a href="audience-adaptation.html">A Lesson on Audience Adaptation</a>
+<a href="textbook-audio.html">LLM Audiobook Prompts</a>
+<a href="self-management.html">A Note on Self-Management</a>
+<a href="neurobiology.html">Magic &amp; Predictions</a>
+<a href="blog-critical-theory.html">On Neuroqueerness &amp; Fugitivity</a>
+<a href="blog-algorithms.html">My Beef with the Algorithm</a>
+<a href="resources.html">Evidence Briefs</a>
+<a href="references.html">References</a>
+<h4>About 2</h4>
+<a href="philosophy.html">Teaching Philosophy</a>
+<a href="ai-disclosure.html">How This Site Is Built</a>
+</nav></details>
+  </div>
 </header>
 
 <section class="hero">
