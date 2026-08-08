@@ -3,6 +3,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Map of Jargon · Gabe Esquivel</title>
 <link rel="stylesheet" href="style.css?v=5">
+<style>
+#jargon-app{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:1rem;align-items:start}
+#jmap{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:pan-x pan-y pinch-zoom}
+#jpanel{border:1px solid var(--line);border-radius:10px;background:#fff;padding:1rem;font-size:.93rem;position:sticky;top:1rem}
+.maphint{display:none;font-family:var(--sans);font-size:.85rem;color:var(--muted);
+  background:#fbf6ea;border:1px solid #eadfc4;border-radius:8px;padding:.5rem .8rem}
+.mapwrap{position:relative}
+@media(max-width:820px){
+  #jargon-app{grid-template-columns:1fr}
+  .maphint{display:block}
+  #jmap{min-height:78vh;border-radius:10px}
+  #jpanel{position:static;top:auto}
+}
+</style>
 </head><body><header class="site-head">
 <a class="wordmark" href="index.html">Debate &amp; Autism</a>
 <nav class="top"><a href="ebps-fads.html">Start Here</a><a href="for-parents.html">For Parents</a><a href="for-educators.html">For Educators</a><a href="controversies.html">Controversies</a><a href="about.html">About</a></nav>
@@ -36,13 +50,14 @@
 
 <div class="page-head"><h1>The Map of Jargon</h1><p class="subtitle">Every field hides behind vocabulary. Click a word to disarm it.</p></div>
 
+<p class="maphint">On a phone: pinch to zoom, drag to pan, tap a term for its definition.</p>
 <p>Autism education has a dialect. This map collects the jargon from across this site &mdash; each
 node is a term, each line a relationship. Click a node for the plain-language version and its
 source. Terms marked &#9679; link to a fuller page.</p>
 
-<div id="jargon-app" style="display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:1rem;align-items:start">
-<svg id="jmap" viewBox="0 0 900 720" style="width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px" role="img" aria-label="A concept map of Autism-education jargon"></svg>
-<aside id="jpanel" style="border:1px solid var(--line);border-radius:10px;background:#fff;padding:1rem;font-size:.93rem;position:sticky;top:1rem">
+<div id="jargon-app">
+<svg id="jmap" viewBox="0 0 900 720" role="img" aria-label="A concept map of Autism-education jargon"></svg>
+<aside id="jpanel">
 <p style="color:var(--muted);margin:0">Click any term on the map.</p></aside>
 </div>
 <script>
@@ -102,15 +117,16 @@ NODES.forEach(n=>{
  const[gr,id,label]=n;
  const g=document.createElementNS(svgNS,'g'); g.style.cursor='pointer';
  const txt=document.createElementNS(svgNS,'text');
- txt.setAttribute('text-anchor','middle');txt.setAttribute('font-size','13.5');
+ txt.setAttribute('text-anchor','middle');txt.setAttribute('font-size', window.innerWidth<820 ? '19' : '13.5');
  txt.setAttribute('font-family','"Avenir Next","Segoe UI",sans-serif');
  txt.setAttribute('font-weight','600');txt.setAttribute('fill',COLORS[gr]);
  txt.innerHTML=(n[7]?'&#9679; ':'')+label;
  const bg=document.createElementNS(svgNS,'rect');
  g.appendChild(bg);g.appendChild(txt);svg.appendChild(g);
  const bb=txt.getBBox();
- bg.setAttribute('x',bb.x-8);bg.setAttribute('y',bb.y-5);bg.setAttribute('width',bb.width+16);
- bg.setAttribute('height',bb.height+10);bg.setAttribute('rx',10);
+ var pad=window.innerWidth<820?11:8;
+ bg.setAttribute('x',bb.x-pad);bg.setAttribute('y',bb.y-pad*0.6);bg.setAttribute('width',bb.width+pad*2);
+ bg.setAttribute('height',bb.height+pad*1.2);bg.setAttribute('rx',10);
  bg.setAttribute('stroke',COLORS[gr]);
  nodeEls[id]={g,bg,txt,group:gr};
  g.addEventListener('click',()=>{sel=id;
@@ -129,6 +145,14 @@ function restyle(){
   p.setAttribute('stroke',on?'#b4552d':'#ded7c8');p.setAttribute('stroke-width',on?2.2:1.2);});
 }
 restyle();
+
+function setMapViewBox(){
+  var narrow=window.innerWidth<820;
+  svg.setAttribute('viewBox', narrow ? '-30 -20 980 780' : '0 0 900 720');
+  svg.setAttribute('preserveAspectRatio', narrow ? 'xMidYMid meet' : 'xMidYMid meet');
+}
+setMapViewBox();
+window.addEventListener('resize', setMapViewBox);
 const still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let t0=null;
 function frame(ts){
