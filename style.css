@@ -201,3 +201,26 @@ h3.dwork-h{font-weight:800;font-size:1.4rem}
 .qabox .qaa p{margin:0}
 .qabox ol{margin:.5rem 0 0;padding-left:1.3rem}
 .qabox ol li{margin:.3rem 0}
+
+/* audience adaptation essay */
+.metricgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.9rem;margin:1.4rem 0}
+.metric{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+.metric .mlabel{font-family:var(--sans);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 .3rem}
+.metric .mnum{font-size:1.55rem;font-weight:800;line-height:1.1;margin:0}
+.metric .msub{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:.25rem 0 0}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.4rem 0}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+.vs .col{background:#fff;border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem}
+.vs .col h4{margin:0 0 .5rem;font-size:.98rem}
+.vs .col.then{border-top:3px solid #a8402c}
+.vs .col.now{border-top:3px solid #4a7a5f}
+.vs ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.95rem}
+.vs li{margin:.35rem 0}
+.wrongbox{background:#fbf6ea;border:1px solid #eadfc4;border-left:4px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:.9rem 1.1rem;margin:1rem 0}
+.wrongbox p:first-child{margin-top:0}
+.wrongbox p:last-child{margin-bottom:0}
+.wrongbox .wlabel{font-family:var(--sans);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;display:block;margin-bottom:.3rem}
+.pullquote{font-size:1.15rem;line-height:1.6;border-left:3px solid var(--accent);padding:.3rem 0 .3rem 1.1rem;
+  margin:1.5rem 0;color:#2e2b26}
