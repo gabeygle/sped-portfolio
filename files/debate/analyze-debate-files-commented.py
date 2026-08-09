@@ -33,6 +33,17 @@ carry "marks", which is how highlighting and underlining are stored:
 
 So almost every function below is some version of the same move: walk down through the
 tree until you hit the text boxes, then count something about them.
+
+ONE WARNING, BECAUSE THIS SCRIPT ALREADY GOT IT WRONG ONCE
+----------------------------------------------------------
+A text box ends wherever the formatting changes. Highlight the "deter" in "deterrence" and
+the file stores two text boxes side by side, "deter" and "rence". An earlier version of this
+script counted the words in each box separately and so reported that as two words. Across a
+whole file that inflated every total by about 1.9%.
+
+The fix is to glue all the text back together first and only then split it into words, which
+is what _flatten and count_words do below. It is the fiddliest part of the script and the
+part most worth checking.
 """
 
 # ---------------------------------------------------------------------------
@@ -98,26 +109,50 @@ def contains(node, node_type):
     return any(contains(c, node_type) for c in node.get('content', []) or [])
 
 
+# The node types that end a paragraph. After each of these we emit a space, so that the
+# last word of one paragraph cannot get fused onto the first word of the next once all the
+# text is glued together.
+BREAK_TYPES = {'tag', 'card_body', 'cite_paragraph', 'block', 'hat', 'pocket', 'paragraph'}
+
+
+def _flatten(node, out):
+    """Glue the document into one long list of (character, marks-on-it) pairs."""
+    if node.get('type') == 'text':                       # a text box: append its characters
+        # Freeze this box's mark names into an immutable set, e.g. {'highlight'}. Every
+        # character in this box carries the same marks, so we attach that set to each one.
+        marks = frozenset(m.get('type') for m in node.get('marks', []) or [])
+        for ch in node.get('text', ''):                  # one entry per character
+            out.append((ch, marks))
+    for child in node.get('content', []) or []:          # then do the same to its children
+        _flatten(child, out)
+    if node.get('type') in BREAK_TYPES:                  # paragraph ended, so add a space
+        out.append((' ', frozenset()))
+    # `out` is modified in place rather than returned, which is why the caller passes in a
+    # list to be filled. It avoids building and joining a new list at every level.
+
+
 def count_words(node, mark=None):
     """Count words under a node. Pass a mark name to count only marked words."""
-    total = 0                                  # running tally for this branch of the tree
-    if node.get('type') == 'text':             # only text boxes contain actual words
-        # Collect this text box's mark names into a set: {'highlight', 'underline_mark'}.
-        # A set is used because we only care whether a mark is present, not how many times.
-        marks = {m.get('type') for m in node.get('marks', []) or []}
-        # Two cases count: no mark was requested (so count everything), or the requested
-        # mark is on this text. Anything else is skipped.
-        if mark is None or mark in marks:
-            # .split() with no argument splits on any whitespace and discards the blanks,
-            # so "the  fish " becomes ['the', 'fish'] and len() gives 2. This is the same
-            # tokenizer used for every count in the script, which is the point: totals and
-            # highlighted counts come from one traversal and one definition of "a word",
-            # so the percentages cannot drift apart.
-            total += len(node.get('text', '').split())
-    # Whether or not this node held text, recurse into its children and add their totals.
-    for child in node.get('content', []) or []:
-        total += count_words(child, mark)
+    stream = []                        # will hold every character, in reading order
+    _flatten(node, stream)             # fill it
+    total = 0                          # words counted so far
+    in_word = False                    # are we currently partway through a word?
+    word_marks = set()                 # marks seen anywhere in the current word
+    for ch, marks in stream:
+        if ch.isspace():               # whitespace ends whatever word we were in
+            if in_word and (mark is None or mark in word_marks):
+                total += 1             # count it, if it qualifies
+            in_word, word_marks = False, set()   # reset for the next word
+        else:
+            in_word = True             # a non-space character means a word is underway
+            word_marks |= marks        # |= adds these marks to what the word has collected
+    if in_word and (mark is None or mark in word_marks):
+        total += 1                     # the file may end mid-word with no trailing space
     return total
+    # Two things fall out of doing it this way. A word split across boxes is counted once,
+    # not twice. And a word only partly highlighted still counts as highlighted, because
+    # word_marks accumulates across the whole word. That is the right call here: a debater
+    # reading "deterrence" aloud reads the whole word, not the highlighted half of it.
 
 
 # ---------------------------------------------------------------------------

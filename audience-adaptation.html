@@ -74,7 +74,7 @@ I had confused <em>what I found meaningful</em> with <em>what they would find me
 which is the oldest mistake in teaching and I made it in my first semester there.</p></div>
 
 <div class="wrongbox"><span class="wlabel">Mistake two</span>
-<p>I miscalibrated difficulty. The file ran to <strong>almost 64,000 words</strong> and I gave the
+<p>I miscalibrated difficulty. The file ran to <strong>almost 63,000 words</strong> and I gave the
 students almost no scaffolding to climb it. They needed more teaching and less content. I gave
 them the reverse.</p></div>
 
@@ -94,14 +94,14 @@ supporting scripts for the second. They are roughly the same length. What change
 about how they teach. These figures come from the documents themselves:</p>
 
 <div class="metricgrid">
-<div class="metric"><p class="mlabel">Highlighted words</p><p class="mnum">497 &rarr; 3,206</p><p class="msub">2022 file &rarr; 2025 file<br>0.8% of the text &rarr; 4.7%</p></div>
-<div class="metric"><p class="mlabel">Underlined words</p><p class="mnum">12,744 &rarr; 7,523</p><p class="msub">2022 file &rarr; 2025 file<br>20.0% of the text &rarr; 11.1%</p></div>
-<div class="metric"><p class="mlabel">Median card length</p><p class="mnum">2,196 &rarr; 743</p><p class="msub">2022 file &rarr; 2025 file<br>words per card</p></div>
+<div class="metric"><p class="mlabel">Highlighted words</p><p class="mnum">493 &rarr; 3,182</p><p class="msub">2022 file &rarr; 2025 file<br>0.8% of the text &rarr; 4.8%</p></div>
+<div class="metric"><p class="mlabel">Underlined words</p><p class="mnum">12,732 &rarr; 7,457</p><p class="msub">2022 file &rarr; 2025 file<br>20.3% of the text &rarr; 11.2%</p></div>
+<div class="metric"><p class="mlabel">Median card length</p><p class="mnum">2,168 &rarr; 734</p><p class="msub">2022 file &rarr; 2025 file<br>words per card</p></div>
 <div class="metric"><p class="mlabel">Cards in the 1AC</p><p class="mnum">19 &rarr; 30</p><p class="msub">2022 file &rarr; 2025 file<br>the speech as actually read</p></div>
 </div>
 
 <p>For scale, <em>Brave New World</em> is 63,766 words, and schools place it at grades 9 to 12.
-The 2022 file is 63,837.</p>
+The 2022 file is 62,629.</p>
 
 <p class="ref">Word count, ATOS level 7.5 and interest level UG 9&ndash;12 from
 <a href="https://www.arbookfind.com/bookdetail.aspx?q=8653&amp;l=EN&amp;client=WKAR">Accelerated
@@ -130,7 +130,7 @@ of calibration.</p>
 <ul>
 <li>Topic chosen by me</li>
 <li>19 cards in the 1AC, 20 in the file</li>
-<li>Median card 2,196 words</li>
+<li>Median card 2,168 words</li>
 <li>No documentation, no notes</li>
 <li>No timing guidance</li>
 <li>Students expected to cut and mark their own</li>
@@ -140,7 +140,7 @@ of calibration.</p>
 <ul>
 <li>Topic chosen by students from a prototype</li>
 <li>30 cards in the 1AC, 56 in the file</li>
-<li>Median card 743 words</li>
+<li>Median card 734 words</li>
 <li>Documentation section answering every predictable question</li>
 <li>Every advantage pre-timed to the minute</li>
 <li>Scripts usable on day one</li>
@@ -151,9 +151,9 @@ of calibration.</p>
 <h3>What I did not change</h3>
 
 <p><mark>I did not make the words easier. I made the unit smaller.</mark> <span class="cu">A
-student meets <em>CAOFA</em>, <em>cetacean</em>, or <em>ecosystem-based management</em> in a
-743-word card, after a fairy tale has already explained the treaty</span> &mdash; rather than on
-the third page of a 2,196-word wall with nothing marked.</p>
+student meets <em>CAOFA</em>, <em>cetacean</em>, or <em>ecosystem-based management</em> in a card
+of about seven hundred words, after a fairy tale has already explained the treaty</span> &mdash;
+rather than on the third page of a card of over two thousand, with nothing marked.</p>
 
 <p>Keeping the vocabulary hard was deliberate, and not only for debate. I work in
 Taiwan with students learning English as a second language, and <mark>vocabulary is one of the
@@ -327,6 +327,14 @@ heading in my notes are all just bold text in the same style, so counting them m
 &mdash; Claude's first pass found 63 cards in the fisheries file where I counted 56. In .cmir a
 card is marked as a card and a citation as a citation, and the counts matched my hand count
 exactly.</p>
+
+<p>The word counts needed a second correction, and this one came from outside. I ran the same
+files through ChatGPT and its totals did not match Claude's. <span class="cu">Both formats break
+text wherever the formatting changes, so highlighting half of a word stores it as two pieces</span>
+&mdash; and counting those pieces separately inflated every total by about 2%. The script now
+reassembles the text before counting words. <mark>The corrected totals match what you get by
+counting the Word versions a paragraph at a time, which is two different parsers over two file
+formats agreeing to the word.</mark></p>
 
 <p>Claude published a Python script to analyze the files. My Python is rusty, so if anybody wants
 to take a look and correct my findings please feel free. It would be great if I could say someone

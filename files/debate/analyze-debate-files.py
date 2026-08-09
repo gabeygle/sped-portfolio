@@ -39,18 +39,26 @@ They are the same documents. This script reads the .cmir versions because they a
 that can be read honestly.
 
 ---------------------------------------------------------------------------
-COUNTING WORDS
+COUNTING WORDS  (an earlier version of this script got this wrong)
 ---------------------------------------------------------------------------
-Every word is counted once, from the text nodes of the document tree, and each text node
-carries its own marks. So a highlighted word and a total word come from the same traversal
-and the same tokenizer.
+Text nodes split at every formatting boundary, in .cmir exactly as runs do in .docx.
+Highlighting the "deter" in "deterrence" produces two adjacent text nodes, and counting
+each node separately then reports two words where the document contains one.
 
-This resolves a problem the .docx version could not avoid. There, formatting boundaries
-split runs mid-word -- highlighting the "deter" in "deterrence" produced two runs -- so
-counting run by run inflated the total by about 2%, and the published percentages and the
-published totals had to use two different denominators. That footnote is now obsolete: one
-traversal, one denominator, and the marked-word counts below are exact rather than
-approximate.
+An earlier version of this script counted node by node and inflated every total by about
+1.9%: 63,837 words for the 2022 file instead of 62,629. Switching formats did not fix
+this, and a claim that it had was published for a few hours before a reader compared the
+output against another tool and the totals did not agree.
+
+What actually fixes it is tokenising once. The functions below flatten the document to a
+stream of characters, each carrying the marks that were active on it, insert a space at
+paragraph boundaries so the last word of one block cannot fuse with the first of the next,
+and only then split on whitespace. A word crossing a formatting boundary is one word that
+carries both sets of marks.
+
+The check that this is right: counting this way gives 62,629 and 66,331, which is exactly
+what counting the .docx versions paragraph by paragraph gives. Two unrelated parsers over
+two file formats agreeing to the word is the strongest evidence available here.
 
 ---------------------------------------------------------------------------
 WHAT IS DELIBERATELY NOT HERE
@@ -88,15 +96,42 @@ def contains(node, node_type):
     return any(contains(c, node_type) for c in node.get('content', []) or [])
 
 
-def count_words(node, mark=None):
-    """Words under this node. With `mark`, only words carrying that mark."""
-    total = 0
+# Node types that end a paragraph. A space is emitted after each so the last word of one
+# block cannot fuse with the first word of the next.
+BREAK_TYPES = {'tag', 'card_body', 'cite_paragraph', 'block', 'hat', 'pocket', 'paragraph'}
+
+
+def _flatten(node, out):
+    """Flatten to (character, marks) pairs so the text can be tokenised once."""
     if node.get('type') == 'text':
-        marks = {m.get('type') for m in node.get('marks', []) or []}
-        if mark is None or mark in marks:
-            total += len(node.get('text', '').split())
+        marks = frozenset(m.get('type') for m in node.get('marks', []) or [])
+        for ch in node.get('text', ''):
+            out.append((ch, marks))
     for child in node.get('content', []) or []:
-        total += count_words(child, mark)
+        _flatten(child, out)
+    if node.get('type') in BREAK_TYPES:
+        out.append((' ', frozenset()))
+
+
+def count_words(node, mark=None):
+    """Words under this node. With `mark`, only words carrying that mark.
+
+    Tokenises the flattened character stream once, so a word split across formatting
+    boundaries counts as one word carrying every mark that touched it. See the docstring.
+    """
+    stream = []
+    _flatten(node, stream)
+    total, in_word, word_marks = 0, False, set()
+    for ch, marks in stream:
+        if ch.isspace():
+            if in_word and (mark is None or mark in word_marks):
+                total += 1
+            in_word, word_marks = False, set()
+        else:
+            in_word = True
+            word_marks |= marks
+    if in_word and (mark is None or mark in word_marks):
+        total += 1
     return total
 
 
