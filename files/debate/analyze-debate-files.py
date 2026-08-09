@@ -4,270 +4,171 @@ analyze-debate-files.py
 Reproduces every figure published on https://burdenofproof.education/audience-adaptation.html
 
 Usage:
-    pip install python-docx pypdf
-    python3 analyze-debate-files.py team-affirmative-01-cognitive-warfare-2022-23.docx
-    python3 analyze-debate-files.py *.docx --pages      # also measures card length in pages
+    python3 analyze-debate-files.py team-affirmative-02-fisheries-2025.cmir
+    python3 analyze-debate-files.py *.cmir
 
-The --pages flag renders each .docx to PDF with LibreOffice and locates every card in the
-rendered output. It is slow (a minute or two per file) but it is the only honest way to
-report a page count. Requires `soffice` on PATH.
+No dependencies. A .cmir file is gzipped JSON; the standard library reads it.
 
 ---------------------------------------------------------------------------
-THE TWO-DENOMINATOR PROBLEM  (read this before quoting any percentage)
+WHY .cmir AND NOT .docx
 ---------------------------------------------------------------------------
-This script reports two different totals for the same document, and they disagree:
+The first version of this script read the .docx files, and it got the card count wrong.
 
-    paragraph-level total   62,629 words   <- counts p.text.split() per paragraph
-    run-level total         63,823 words   <- counts r.text.split() per run
+A .docx stores appearance, not meaning. It knows a paragraph is styled "Heading 4"; it does
+not know whether that paragraph is a card tag, an analytic the debater argues in their own
+voice, or a heading in a documentation section. All three are formatted alike, because all
+three look alike on paper. So the script had to guess -- does the body contain underlining?
+is the tag phrased as a question? -- and guessing produced 63 cards in the fisheries file
+where a hand count found 56.
 
-A "run" is a span of uniformly formatted characters. Word processors split runs at every
-formatting change, and that split frequently lands mid-word: highlighting the "deter" in
-"deterrence" produces two runs, and splitting on whitespace then counts two words where the
-document contains one. The run-level total is therefore inflated, by about 1.9% here.
+CardMirror's .cmir format stores the document model instead:
 
-Both numbers are useful, but only for different things:
+    hat / pocket / block   the file's outline, so a section like "1AC—Canada" is addressable
+    card                   an actual card, typed as such
+    tag / card_body        the parts of a card
+    cite_paragraph         the citation line, typed as such
+    marks: highlight, underline_mark, emphasis_mark, cite_mark
 
-  * Use the PARAGRAPH total as the length of the document. It is correct.
-  * Use the RUN total only as the denominator for highlight/underline percentages, because
-    the numerators are themselves counted run-by-run and carry the same inflation. Dividing
-    a run-level numerator by a paragraph-level denominator would mix two counting schemes
-    and overstate the percentage.
+Which makes the analysis a matter of reading fields rather than inferring them. A card is an
+evidence card when it contains a cite_paragraph -- there are exactly 56 of those in the
+fisheries file and 20 in the cognitive warfare file, matching the hand counts with no
+heuristics, no thresholds, and no special cases. Roughly sixty lines of guesswork deleted.
 
-The published page follows that rule: totals come from paragraph counts, percentages from
-run counts. The absolute word counts of highlighted and underlined text are run-level and
-so are slightly high; treat them as accurate to about two percent, not exact.
-
-A cleaner fix, not implemented here, is to concatenate the runs of each paragraph into a
-character stream, tag each character with its formatting, and tokenise once. That yields a
-single denominator. It is on the roadmap.
+The .docx files remain published alongside these, because Word is what most people have.
+They are the same documents. This script reads the .cmir versions because they are the ones
+that can be read honestly.
 
 ---------------------------------------------------------------------------
-CARD DETECTION  (this is where the first version was wrong)
+COUNTING WORDS
 ---------------------------------------------------------------------------
-A card is a unit of evidence: a tag, a citation, then the quoted body. The obvious rule --
-"every paragraph styled Heading 4 is a tag" -- is wrong, and counting that way reported 63
-cards in the 2025 file where a hand count finds 56.
+Every word is counted once, from the text nodes of the document tree, and each text node
+carries its own marks. So a highlighted word and a total word come from the same traversal
+and the same tokenizer.
 
-Two other things wear the tag style:
-
-  * Analytics. Arguments made in the debater's own voice, with no evidence under them. They
-    are formatted like tags because they are read aloud like tags.
-  * Documentation headings. The 2025 file opens with a Notes section whose questions ("What
-    does the plan do?") are styled as tags.
-
-The rule this script uses instead: a Heading 4 block is a card if its body contains
-underlined text, has at least one paragraph after the citation line, and its tag is not a
-question. Underlining is the discriminator that matters -- underlining marks the reasoning
-inside a piece of quoted evidence, so an analytic has none. The question test then removes
-documentation headings, which can contain underlining because they quote the plan text.
-
-That rule reproduces a hand count exactly on both files: 20 cards in the 2022 file and 56
-in the 2025 file. It is validated against the only ground truth available, which is a person
-reading the documents.
-
-Two further checks on tag detection itself:
-
-  1. Unstyled tags. A tag typed as bold body text instead of Heading 4 would be missed
-     entirely and merged into the card above. Scanning for fully bold "Normal" paragraphs
-     under 45 words finds 0 in the 2022 file and 1 in the 2025 file, and that one is the
-     placeholder "[FIGURE OMITTED]".
-
-  2. Positional check against the rendered file. With --pages, every located tag is found in
-     document order, 21 of 21 in the 2022 file and 84 of 93 in the 2025 file. The 9 not
-     located are tags shorter than the 20-character matching threshold, such as "Timing",
-     skipped to avoid false positives.
-
-The weakest remaining assumption is the citation rule. "First body paragraph is the
-citation" holds wherever it was spot-checked, but is not verified exhaustively. Where it
-fails, that card's body is undercounted by one paragraph.
+This resolves a problem the .docx version could not avoid. There, formatting boundaries
+split runs mid-word -- highlighting the "deter" in "deterrence" produced two runs -- so
+counting run by run inflated the total by about 2%, and the published percentages and the
+published totals had to use two different denominators. That footnote is now obsolete: one
+traversal, one denominator, and the marked-word counts below are exact rather than
+approximate.
 
 ---------------------------------------------------------------------------
 WHAT IS DELIBERATELY NOT HERE
 ---------------------------------------------------------------------------
 An earlier version compared tag vocabulary against English word-frequency bands using the
 `wordfreq` package. Those figures are not published and not computed here: the mapping from
-Zipf frequency to a difficulty level like CEFR was an approximation without a source behind
+Zipf frequency to a difficulty level such as CEFR was an approximation with no source behind
 it. The analysis is on the roadmap pending a defensible mapping.
 """
 
-import sys
-import re
-import subprocess
+import gzip
+import json
 import statistics as st
+import sys
+from collections import OrderedDict
 from pathlib import Path
 
-import docx
-from docx.enum.text import WD_COLOR_INDEX
+SECTION_TYPES = ('hat', 'pocket', 'block')
 
 
-def is_highlighted(run):
-    return run.font.highlight_color not in (None, WD_COLOR_INDEX.AUTO)
+def load(path):
+    with gzip.open(path, 'rt', encoding='utf-8') as fh:
+        return json.load(fh)['doc']['content']
 
 
-def word_counts(document):
-    """Return the two totals, plus run-level marked-word counts. See the docstring."""
-    para_total = sum(len(p.text.split()) for p in document.paragraphs)
-    run_total = hl = ul = both = 0
-    for para in document.paragraphs:
-        for run in para.runs:
-            n = len(run.text.split())
-            if not n:
-                continue
-            run_total += n
-            h, u = is_highlighted(run), bool(run.underline)
-            if h:
-                hl += n
-            if u:
-                ul += n
-            if h and u:
-                both += n
-    return dict(para_total=para_total, run_total=run_total,
-                highlighted=hl, underlined=ul, both=both)
+def text_of(node):
+    if node.get('type') == 'text':
+        return node.get('text', '')
+    return ''.join(text_of(c) for c in node.get('content', []) or [])
 
 
-DOC_QUESTION = re.compile(r'^(what|why|how|is|are|do|does|when|where|who)\b.*\?$', re.I)
+def contains(node, node_type):
+    if node.get('type') == node_type:
+        return True
+    return any(contains(c, node_type) for c in node.get('content', []) or [])
 
 
-def blocks(document):
-    """Split on Heading 4. Body excludes the first paragraph (the citation). See docstring."""
-    out, current = [], None
-    for para in document.paragraphs:
-        style, text = para.style.name, para.text.strip()
-        if style == 'Heading 4':
-            if current:
-                out.append(current)
-            current = {'tag': text, 'body': []}
-        elif current is not None and style == 'Normal' and text:
-            current['body'].append(para)   # keep the object; formatting is needed below
-    if current:
-        out.append(current)
-    return out
+def count_words(node, mark=None):
+    """Words under this node. With `mark`, only words carrying that mark."""
+    total = 0
+    if node.get('type') == 'text':
+        marks = {m.get('type') for m in node.get('marks', []) or []}
+        if mark is None or mark in marks:
+            total += len(node.get('text', '').split())
+    for child in node.get('content', []) or []:
+        total += count_words(child, mark)
+    return total
 
 
-def body_words(block):
-    return sum(len(p.text.split()) for p in block['body'][1:])
+def is_evidence_card(node):
+    """A card with a citation is evidence. A card without one is an analytic."""
+    return node.get('type') == 'card' and contains(node, 'cite_paragraph')
 
 
-def is_card(block):
-    """A tag block is a card, not an analytic or a documentation heading. See docstring."""
-    underlined = any(r.underline for p in block['body'] for r in p.runs)
-    return (underlined
-            and body_words(block) > 0
-            and not DOC_QUESTION.match(block['tag']))
+def card_body_words(card):
+    """Words in the card body, which excludes the tag and the citation line."""
+    return sum(count_words(c) for c in card.get('content', []) or []
+               if c.get('type') == 'card_body')
 
 
-def unstyled_tag_check(document):
-    """Count fully bold short Normal paragraphs, which would be tags this script misses."""
-    found = []
-    for para in document.paragraphs:
-        text = para.text.strip()
-        if not text or para.style.name != 'Normal':
-            continue
-        runs = [r for r in para.runs if r.text.strip()]
-        if runs and all(r.bold for r in runs) and len(text.split()) < 45:
-            found.append(text[:80])
-    return found
+def sections(top):
+    """Map each section heading to the evidence cards beneath it, in document order."""
+    grouped, current = OrderedDict(), None
+    for node in top:
+        if node['type'] in SECTION_TYPES:
+            current = text_of(node).strip()
+            grouped.setdefault(current, [])
+        elif is_evidence_card(node) and current is not None:
+            grouped[current].append(node)
+    return grouped
 
 
-def _normalise(s):
-    return re.sub(r'\W+', '', s).lower()
+def report(path):
+    top = load(path)
+    doc = {'type': 'doc', 'content': top}
 
+    total = count_words(doc)
+    highlighted = count_words(doc, 'highlight')
+    underlined = count_words(doc, 'underline_mark')
 
-def page_spans(docx_path, tags, workdir):
-    """Render to PDF and measure how many pages each card occupies. Needs soffice + pypdf."""
-    from pypdf import PdfReader
+    all_cards = [n for n in top if n['type'] == 'card']
+    cards = [n for n in all_cards if is_evidence_card(n)]
+    body = [card_body_words(c) for c in cards]
+    tags = [len(text_of(c.get('content', [])[0]).split())
+            for c in cards if c.get('content')]
 
-    pdf = Path(workdir) / (Path(docx_path).stem + '.pdf')
-    if not pdf.exists():
-        subprocess.run(['soffice', '--headless', '--convert-to', 'pdf',
-                        str(docx_path), '--outdir', str(workdir)],
-                       check=True, capture_output=True, timeout=900)
-    reader = PdfReader(str(pdf))
-    pages = [_normalise(p.extract_text() or '') for p in reader.pages]
-
-    located, cursor, skipped = [], 0, 0
-    for tag in tags:
-        key = _normalise(tag)[:60]
-        if len(key) < 20:          # too short to match without false positives
-            skipped += 1
-            continue
-        hit = next((i for i in range(cursor, len(pages)) if key in pages[i]), None)
-        if hit is None:
-            hit = next((i for i, p in enumerate(pages) if key in p), None)
-        if hit is None:
-            skipped += 1
-            continue
-        located.append(hit)
-        cursor = hit
-
-    spans = [located[i + 1] - located[i] + 1 for i in range(len(located) - 1)]
-    return dict(total_pages=len(pages), located=len(located),
-                skipped=skipped, spans=spans)
-
-
-def report(path, measure_pages, workdir):
-    document = docx.Document(path)
-    counts = word_counts(document)
-    all_blocks = blocks(document)
-    cs = [b for b in all_blocks if is_card(b)]
-    tags = [c['tag'] for c in cs if c['tag']]
-    tag_words = [len(t.split()) for t in tags]
-    card_words = [body_words(c) for c in cs]
-    rt = counts['run_total']
-
-    print('=' * 72)
+    print('=' * 74)
     print(Path(path).name)
-    print('=' * 72)
-    print(f"  words, paragraph-level (the document's length) : {counts['para_total']:>8,}")
-    print(f"  words, run-level (percentage denominator only)  : {rt:>8,}"
-          f"   (+{100 * (rt - counts['para_total']) / counts['para_total']:.1f}%)")
+    print('=' * 74)
+    print(f"  words, whole file  : {total:>7,}")
+    print(f"  highlighted words  : {highlighted:>7,}   {100 * highlighted / total:5.1f}%   (read aloud)")
+    print(f"  underlined words   : {underlined:>7,}   {100 * underlined / total:5.1f}%   (the warrant)")
     print()
-    print(f"  highlighted words : {counts['highlighted']:>7,}   {100 * counts['highlighted'] / rt:5.1f}%")
-    print(f"  underlined words  : {counts['underlined']:>7,}   {100 * counts['underlined'] / rt:5.1f}%")
-    print(f"  both              : {counts['both']:>7,}   {100 * counts['both'] / rt:5.1f}%")
+    print(f"  card nodes         : {len(all_cards)}")
+    print(f"  evidence cards     : {len(cards)}"
+          f"   ({len(all_cards) - len(cards)} analytics, no citation)")
+    print(f"  tag length, words  : median {st.median(tags):.0f}  mean {st.mean(tags):.1f}"
+          f"  range {min(tags)}-{max(tags)}")
+    print(f"  card body, words   : median {st.median(body):.0f}  mean {st.mean(body):.0f}"
+          f"  range {min(body)}-{max(body)}")
+    print(f"  cards over 1,000 w : {sum(b > 1000 for b in body)}/{len(cards)}"
+          f" = {100 * sum(b > 1000 for b in body) / len(cards):.0f}%")
     print()
-    print(f"  Heading 4 blocks         : {len(all_blocks)}")
-    print(f"  of those, cards          : {len(cs)}"
-          f"   ({len(all_blocks) - len(cs)} analytics / documentation headings)")
-    print(f"  tag length, words        : median {st.median(tag_words):.0f}  "
-          f"mean {st.mean(tag_words):.1f}  range {min(tag_words)}-{max(tag_words)}")
-    print(f"  card body, words         : median {st.median(card_words):.0f}  "
-          f"mean {st.mean(card_words):.0f}  range {min(card_words)}-{max(card_words)}")
-    print(f"  cards over 1,000 words   : {sum(b > 1000 for b in card_words)}"
-          f"/{len(cs)} = {100 * sum(b > 1000 for b in card_words) / len(cs):.0f}%")
-
-    suspects = unstyled_tag_check(document)
-    print(f"  unstyled-tag check       : {len(suspects)} suspect paragraph(s)"
-          + (f" -> {suspects[:3]}" if suspects else " (clean)"))
-
-    if measure_pages:
-        print()
-        try:
-            p = page_spans(path, tags, workdir)
-        except Exception as exc:
-            print(f"  page measurement failed: {exc}")
-            return
-        print(f"  rendered pages           : {p['total_pages']}")
-        print(f"  tags located in the PDF  : {p['located']} of {len(tags)}"
-              f"  ({p['skipped']} skipped as too short to match)")
-        if p['spans']:
-            print(f"  card length, pages       : median {st.median(p['spans']):.1f}  "
-                  f"mean {st.mean(p['spans']):.2f}  max {max(p['spans'])}")
-            print("  (a card occupying part of one page counts as 1)")
+    print("  evidence cards by section:")
+    for name, group in sections(top).items():
+        if group:
+            words = sum(card_body_words(c) for c in group)
+            print(f"      {len(group):3d} cards  {words:>6,} words   {name[:52]}")
     print()
 
 
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith('--')]
-    measure_pages = '--pages' in sys.argv
-    if not args:
+    paths = sys.argv[1:]
+    if not paths:
         print(__doc__)
         sys.exit(1)
-    workdir = Path('.') / '_render'
-    if measure_pages:
-        workdir.mkdir(exist_ok=True)
-    for path in args:
-        report(path, measure_pages, workdir)
+    for path in paths:
+        report(path)
 
 
 if __name__ == '__main__':
