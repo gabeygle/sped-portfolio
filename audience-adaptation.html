@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://burdenofproof.education/audience-adaptation.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A Lesson on Audience Adaptation · Gabe Esquivel</title>
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head><body><header class="site-head">
 <a class="wordmark" href="index.html">Debate &amp; Autism</a>
 <nav class="top"><a href="ebps-fads.html">Start Here</a><a href="for-parents.html">For Parents</a><a href="for-educators.html">For Educators</a><a href="controversies.html">Controversies</a><a href="about.html">About</a></nav>
@@ -318,35 +318,31 @@ it keeps the structure the Word file discards.</div>
 <a href="how-to-read-debate-files.html">How to Read Debate Files</a> explains the anatomy &mdash;
 what the highlighting and underlining mean, and why they are the whole point of this page.</p>
 
-<h3>Checking my own numbers</h3>
+<details class="howto"><summary>How I calculated the numbers</summary>
+<div class="inner">
 
-<p>This page argues that a claim should carry its warrant, which obliges me to show my working.
-Every figure above comes from one script reading the two files, and you can run it yourself:</p>
+<p>I used Claude Cowork, pointed it at my documents in the CardMirror format, and asked it to
+count the cards, word counts, underlining, highlighting, and tags. I manually counted the cards
+for each and compared with Claude's results.</p>
+
+<p>.cmir is better than .docx for this kind of work because a Word file records what a paragraph
+looks like, while a CardMirror file records what it is. In Word, a card tag, an analytic, and a
+heading in my notes are all just bold text in the same style, so counting them means guessing
+&mdash; Claude's first pass found 63 cards in the fisheries file where I counted 56. In .cmir a
+card is marked as a card and a citation as a citation, and the counts matched my hand count
+exactly.</p>
+
+<p>Claude published a Python script to analyze the files. My Python is rusty, so if anybody wants
+to take a look and correct my findings please feel free. It would be great if I could say someone
+audited the data.</p>
 
 <a class="dfile" href="files/debate/analyze-debate-files.py">analyze-debate-files.py <small>&middot; Python, no dependencies</small></a>
 
-<p>Counting the cards took two tries, and the first was wrong. Reading the Word versions, the
-obvious rule &mdash; every paragraph in the tag style is a card &mdash; gave 63 for the 2025
-file. <span class="cu">A hand count of the document found 56.</span> Two other things wear the
-tag style: analytics, which are arguments a debater makes in their own voice with no evidence
-beneath them, and the questions heading the documentation. A Word file cannot tell them apart,
-because it stores what a paragraph looks like and not what it is, so the script had to guess and
-guessed badly.</p>
+<p class="ref">Still to do: a comparison of the vocabulary in each file against English
+word-frequency bands is written but unpublished, pending a defensible mapping from word
+frequency to reading difficulty.</p>
 
-<p><mark>The fix was to stop reading the file that throws the structure away.</mark> CardMirror's
-format keeps the document model: a card is marked as a card, a citation as a citation, the
-outline as an outline. <span class="cu">An evidence card is simply one that contains a
-citation</span> &mdash; 20 in the 2022 file and 56 in the 2025 file, matching the hand count with
-no rules, thresholds or special cases. Isolating the first affirmative, which needs the file's
-outline, is possible for the same reason. About sixty lines of inference came out of the script.</p>
-
-<p>It is worth being plain about the sequence: an automated count was wrong by a seventh, it
-looked authoritative, and a person reading the document caught it. The figures above are the ones
-that survived that.</p>
-
-<div class="construction">&#128736; <strong>Still to do:</strong> a comparison of the vocabulary
-in each file against English word-frequency bands is written but unpublished, pending a
-defensible mapping from word frequency to reading difficulty.</div>
+</div></details>
 
 </main>
 <footer>&copy; Gabe Esquivel · <a href="#contact" class="eml" data-u="gaboesquivel" data-d="gmail.com">email</a> · Taipei, Taiwan<script>document.querySelectorAll(".eml").forEach(function(a){var e=a.dataset.u+"@"+a.dataset.d;a.href="mailto:"+e;a.textContent=e;});</script></footer>

@@ -230,3 +230,15 @@ h3.dwork-h{font-weight:800;font-size:1.4rem}
   color:var(--accent);font-weight:700;display:block;margin-bottom:.3rem}
 .pullquote{font-size:1.15rem;line-height:1.6;border-left:3px solid var(--accent);padding:.3rem 0 .3rem 1.1rem;
   margin:1.5rem 0;color:#2e2b26}
+
+/* inline disclosure section (methods, working notes) */
+details.howto{border:1px solid var(--line);border-radius:10px;background:#fff;
+  padding:.2rem .2rem;margin:1.6rem 0}
+details.howto summary{cursor:pointer;list-style:none;padding:.75rem 1.1rem;
+  font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--ink);user-select:none}
+details.howto summary::-webkit-details-marker{display:none}
+details.howto summary::after{content:" \25B8";color:var(--accent)}
+details.howto[open] summary::after{content:" \25BE"}
+details.howto[open] summary{border-bottom:1px solid var(--line)}
+details.howto .inner{padding:.9rem 1.1rem .3rem}
+details.howto .inner p:last-child{margin-bottom:.7rem}
