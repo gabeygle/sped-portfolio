@@ -256,3 +256,10 @@ table.tally .who{font-weight:600}
 table.tally .note{display:block;font-size:.76rem;color:var(--muted);font-weight:400;line-height:1.35}
 table.tally td.bad{color:#a8402c}
 table.tally td.good{color:#3d6b4f}
+
+/* audit screenshots inside the methods disclosure */
+figure.shot{margin:1.4rem 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+figure.shot img{display:block;width:100%;height:auto}
+figure.shot figcaption{font-family:var(--sans);font-size:.82rem;color:var(--muted);
+  line-height:1.5;padding:.7rem .9rem;border-top:1px solid var(--line);background:#fbfaf7}
+figure.shot figcaption b{color:var(--ink)}
