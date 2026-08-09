@@ -61,6 +61,36 @@ what counting the .docx versions paragraph by paragraph gives. Two unrelated par
 two file formats agreeing to the word is the strongest evidence available here.
 
 ---------------------------------------------------------------------------
+WHICH MARKS ARE COUNTED, AND WHY THE OTHERS ARE NOT
+---------------------------------------------------------------------------
+These files carry more formatting marks than the two this script reports:
+
+    highlight         counted -- the words a debater says out loud
+    underline_mark    counted -- the warrant, underlined inside quoted evidence
+    underline_direct  NOT counted -- see below
+    emphasis_mark, cite_mark, bold, italic, font_size, font_family, link,
+    superscript       not counted; they are typography, not argument marking
+
+`underline_direct` deserves the explanation, because it looks like it should count.
+It is underlining applied directly rather than through the evidence-marking system, and
+in both of these files it appears **only inside tags** -- 62 text nodes in the 2022 file
+and 75 in the 2025 file, none of them in a card body. The words carrying it are the
+debater's own emphasis on their own tagline: "stalled", "poisons", "collapses", "invites".
+
+That is a different act from underlining the reasoning inside a piece of quoted evidence,
+which is what the published figure measures, so it is excluded on purpose. Including it
+would add 80 words to the 2022 file (+0.6%) and 100 to the 2025 file (+1.3%).
+
+If you are adapting this script to other files, check that assumption before trusting it.
+A file where underline_direct appears inside card bodies would mean something different,
+and this script would then undercount. Print the mark inventory first:
+
+    marks = collections.Counter()
+    def scan(n):
+        for m in n.get('marks', []) or []: marks[m.get('type')] += 1
+        for c in n.get('content', []) or []: scan(c)
+
+---------------------------------------------------------------------------
 WHAT IS DELIBERATELY NOT HERE
 ---------------------------------------------------------------------------
 An earlier version compared tag vocabulary against English word-frequency bands using the

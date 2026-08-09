@@ -44,6 +44,25 @@ whole file that inflated every total by about 1.9%.
 The fix is to glue all the text back together first and only then split it into words, which
 is what _flatten and count_words do below. It is the fiddliest part of the script and the
 part most worth checking.
+
+WHICH MARKS ARE COUNTED, AND WHY THE OTHERS ARE NOT
+---------------------------------------------------
+These files carry more marks than the two this script reports. `highlight` and
+`underline_mark` are counted. `emphasis_mark`, `cite_mark`, `bold`, `italic`, `font_size`,
+`font_family`, `link` and `superscript` are not, because they are typography rather than
+argument marking.
+
+`underline_direct` is the one worth explaining, because it looks like it should count. It is
+underlining applied directly rather than through the evidence-marking system, and in both of
+these files it appears **only inside tags** -- 62 text nodes in the 2022 file, 75 in the 2025
+file, none in a card body. The words carrying it are the debater emphasising a verb in their
+own tagline: "stalled", "poisons", "collapses", "invites". That is a different act from
+underlining the reasoning inside quoted evidence, which is what the published figure measures,
+so it is excluded deliberately. Including it would add 80 words to the 2022 file (+0.6%) and
+100 to the 2025 file (+1.3%).
+
+If you point this script at other files, check that first. Somewhere that underline_direct
+appears inside card bodies, this script would undercount.
 """
 
 # ---------------------------------------------------------------------------

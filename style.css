@@ -263,3 +263,15 @@ figure.shot img{display:block;width:100%;height:auto}
 figure.shot figcaption{font-family:var(--sans);font-size:.82rem;color:var(--muted);
   line-height:1.5;padding:.7rem .9rem;border-top:1px solid var(--line);background:#fbfaf7}
 figure.shot figcaption b{color:var(--ink)}
+
+/* a quoted paragraph attributed to another writer */
+p.quoted{border-left:3px solid var(--line);padding:.1rem 0 .1rem 1rem;margin:1rem 0;color:#2e2b26}
+
+/* footnote row + note under the tally table */
+table.tally tr.diff td{border-top:1px solid var(--ink);border-bottom:none;
+  font-family:var(--sans);font-size:.8rem;color:var(--muted);padding-top:.5rem}
+table.tally sup{color:#8a6d1f;font-weight:700}
+.tallynote{background:#fdf3d7;border:1px solid #e8d9a0;border-radius:8px;
+  padding:.65rem .9rem;margin:.2rem 0 1.2rem;font-family:var(--sans);font-size:.82rem;
+  line-height:1.55;color:#4a4030}
+.tallynote sup{color:#8a6d1f;font-weight:700}

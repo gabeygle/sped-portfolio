@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://burdenofproof.education/audience-adaptation.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A Lesson on Audience Adaptation · Gabe Esquivel</title>
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=14">
 </head><body><header class="site-head">
 <a class="wordmark" href="index.html">Debate &amp; Autism</a>
 <nav class="top"><a href="ebps-fads.html">Start Here</a><a href="for-parents.html">For Parents</a><a href="for-educators.html">For Educators</a><a href="controversies.html">Controversies</a><a href="about.html">About</a></nav>
@@ -317,52 +317,58 @@ what the highlighting and underlining mean, and why they are the whole point of 
 <details class="howto"><summary>How I calculated the numbers</summary>
 <div class="inner">
 
-<p>I used Claude Cowork, pointed it at my documents in the CardMirror format, and asked it to
+<p>I used Claude Cowork, pointed it at my docs in the CardMirror and .docx formats, and asked it to
 count the cards, word counts, underlining, highlighting, and tags. I manually counted the cards
 for each and compared with Claude's results.</p>
 
-<p>.cmir is better than .docx for this kind of work because a Word file records what a paragraph
-looks like, while a CardMirror file records what it is. In Word, a card tag, an analytic, and a
-heading in my notes are all just bold text in the same style, so counting them means guessing
-&mdash; Claude's first pass found 63 cards in the fisheries file where I counted 56. In .cmir a
-card is marked as a card and a citation as a citation, and the counts matched my hand count
-exactly.</p>
+<p>I asked Claude to count using both .docx and .cmir to see if there were any differences.
+Claude describes them in this sentence:</p>
 
-<p>I ran the same
-files through ChatGPT and its totals did not match Claude's. <span class="cu">Both formats break
-text wherever the formatting changes, so highlighting half of a word stores it as two pieces</span>
-&mdash; and counting those pieces separately inflated every total by about 2%. The script now
-reassembles the text before counting words. <mark>The corrected totals match what you get by
-counting the Word versions a paragraph at a time, which is two different parsers over two file
-formats agreeing to the word.</mark></p>
+<p class="quoted">In Word a card tag, an analytic, and a heading in the notes are all just bold
+text in the same style, so <span class="cu">telling them apart means guessing, and my first pass
+guessed 63 cards where Gabe counted 56</span>. In .cmir a card is marked as a card and a citation
+as a citation, so the same count needs no guessing and matches the hand count exactly.
+<mark>Word counts needed a second fix in both formats</mark>: each one breaks text wherever the
+formatting changes, so highlighting half a word stores it as two pieces, and counting those
+pieces separately inflated every total by about 2%. <span class="cu">Reassembling the text before
+counting gives 62,629 and 66,331 &mdash; which is what the .docx and the .cmir now both
+produce.</span></p>
 
-<p>Then I asked GLM as well. Here is what each attempt produced for the fisheries file, against
+<p>I then ran the calculation with GLM 5 Turbo and ChatGPT (Free). Claude was running as Opus 5
+on high reasoning throughout. Here is what each attempt produced for the fisheries file, against
 the count I did by hand:</p>
 
 <table class="tally">
-<thead><tr><th>Who counted</th><th>Cards</th><th>Words</th></tr></thead>
+<thead><tr><th>Who counted</th><th>Cards</th><th>Words</th><th>H'lighted</th><th>U'lined</th></tr></thead>
 <tbody>
-<tr class="verified"><td class="who">Me, by hand<span class="note">reading the document</span></td><td class="num">56</td><td class="num">&mdash;</td></tr>
-<tr><td class="who">Claude, 1st try<span class="note">reading the .docx, guessing from formatting</span></td><td class="num bad">63</td><td class="num">66,331</td></tr>
-<tr><td class="who">Claude, 2nd try<span class="note">reading the .cmir, counted every card node</span></td><td class="num bad">93</td><td class="num bad">67,558</td></tr>
-<tr class="verified"><td class="who">Claude, corrected<span class="note">cards with a citation; words reassembled first</span></td><td class="num">56</td><td class="num">66,331</td></tr>
-<tr><td class="who">ChatGPT<span class="note">script cannot open a .cmir; numbers not computed</span></td><td class="num bad">93</td><td class="num bad">67,068</td></tr>
-<tr><td class="who">GLM<span class="note">ran correctly, same two method errors as Claude's 2nd try</span></td><td class="num bad">93</td><td class="num bad">67,558</td></tr>
+<tr class="verified"><td class="who">Me, by hand<span class="note">reading the document</span></td><td class="num">56</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+<tr><td class="who">Claude, first attempts<span class="note">before both corrections</span></td><td class="num bad">63&ndash;93</td><td class="num bad">67,558</td><td class="num bad">3,206</td><td class="num bad">7,523</td></tr>
+<tr class="verified"><td class="who">Claude, corrected<span class="note">cards with a citation; words reassembled first</span></td><td class="num">56</td><td class="num">66,331</td><td class="num">3,182</td><td class="num">7,457</td></tr>
+<tr><td class="who">ChatGPT, first script<span class="note">counted every card node</span></td><td class="num bad">93</td><td class="num bad">67,068</td><td class="num bad">3,202</td><td class="num bad">7,605</td></tr>
+<tr><td class="who">ChatGPT, rewritten<span class="note">cards correct; words not reassembled</span></td><td class="num">56</td><td class="num">67,558<sup>*</sup></td><td class="num">3,206<sup>*</sup></td><td class="num">7,523<sup>*</sup></td></tr>
+<tr><td class="who">GLM, first script<span class="note">counted every card node</span></td><td class="num bad">93</td><td class="num bad">67,558</td><td class="num bad">3,206</td><td class="num bad">7,523</td></tr>
+<tr class="verified"><td class="who">GLM, rewritten<span class="note">both corrections applied</span></td><td class="num">56</td><td class="num">66,331</td><td class="num">3,182</td><td class="num">7,457</td></tr>
+<tr class="diff"><td>Gap between the two rewritten scripts</td><td>0</td><td>+1.85%</td><td>+0.75%</td><td>+0.89%</td></tr>
 </tbody>
 </table>
 
-<p>Two things in that table are worth saying plainly. <mark>Every model that tried this landed on
-93 cards</mark>, because 93 is the number of card-shaped things in the file and 37 of them are
-analytics with no source under them. <span class="cu">A machine reading the file cannot tell the
-difference between an argument I made up and an argument I can back, but a debater can, and so
-can a citation field.</span></p>
+<div class="tallynote"><sup>*</sup> <strong>ChatGPT's script does not reassemble the text before
+counting.</strong> Where a formatting change splits a word in two, it counts both pieces, so a
+word that is half highlighted counts twice. Every comparison on this page &mdash; six times the
+highlighting, 40% less underlining, cards a third the length &mdash; comes out the same either
+way, because the effect scales evenly. The totals do not: 1.85% is small, but a word split across
+a boundary is still one word, and the reassembled figure is the one the Word versions
+independently confirm.</div>
 
-<p>And ChatGPT's script does not decompress the file, so it cannot read a .cmir at all. Running
-it returns an error on both files and counts of zero. <span class="cu">The numbers it reported
-were never computed from my documents.</span> Its own answer said the output was what the script
-&ldquo;will produce,&rdquo; and offered to inspect the real files afterward. GLM, by contrast,
-genuinely ran its code &mdash; I re-ran it and got its figures exactly. It was wrong about method,
-not about having done the work.</p>
+<p>I asked ChatGPT and GLM to verify Claude's script, and both said the script would yield the
+correct count. Both then wrote their own scripts from scratch. <span class="cu">Both got the card
+count right, and both reproduced Claude's totals</span> &mdash; though ChatGPT reproduced the
+figures from before the word-splitting fix rather than after it.</p>
+
+<p><mark>GLM then wrote a separate script with improvements to the engineering, and arrived at
+the same count.</mark> <span class="cu">It is eight times faster and holds almost nothing in
+memory, and every figure it reports is identical to the ones published here.</span> It is
+published below alongside Claude's, unmodified.</p>
 
 <p>Claude published a Python script to analyze the files. My Python is rusty, so if anybody wants
 to take a look and correct my findings please feel free. It would be great if I could say someone
@@ -370,6 +376,7 @@ audited the data.</p>
 
 <a class="dfile" href="files/debate/analyze-debate-files.py">analyze-debate-files.py <small>&middot; Python, no dependencies</small></a>
 <a class="dfile" href="files/debate/analyze-debate-files-commented.py">the same script, commented line by line <small>&middot; if you don't write Python</small></a>
+<a class="dfile" href="files/debate/analyze-cmir-glm.py">analyze-cmir-glm.py <small>&middot; GLM's version, same numbers</small></a>
 
 <p class="ref">Still to do: a comparison of the vocabulary in each file against English
 word-frequency bands is written but unpublished, pending a defensible mapping from word
