@@ -242,3 +242,17 @@ details.howto[open] summary::after{content:" \25BE"}
 details.howto[open] summary{border-bottom:1px solid var(--line)}
 details.howto .inner{padding:.9rem 1.1rem .3rem}
 details.howto .inner p:last-child{margin-bottom:.7rem}
+
+/* cross-tool tally table */
+table.tally{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem;margin:1rem 0}
+table.tally th,table.tally td{padding:.45rem .5rem;border-bottom:1px solid var(--line);text-align:right}
+table.tally th:first-child,table.tally td:first-child{text-align:left}
+table.tally thead th{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;border-bottom:1px solid var(--ink)}
+table.tally td.num{font-variant-numeric:tabular-nums}
+table.tally tr.verified{background:#eef4ea}
+table.tally tr.verified td{font-weight:700}
+table.tally .who{font-weight:600}
+table.tally .note{display:block;font-size:.76rem;color:var(--muted);font-weight:400;line-height:1.35}
+table.tally td.bad{color:#a8402c}
+table.tally td.good{color:#3d6b4f}

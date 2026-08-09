@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://burdenofproof.education/audience-adaptation.html">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A Lesson on Audience Adaptation · Gabe Esquivel</title>
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head><body><header class="site-head">
 <a class="wordmark" href="index.html">Debate &amp; Autism</a>
 <nav class="top"><a href="ebps-fads.html">Start Here</a><a href="for-parents.html">For Parents</a><a href="for-educators.html">For Educators</a><a href="controversies.html">Controversies</a><a href="about.html">About</a></nav>
@@ -328,13 +328,41 @@ heading in my notes are all just bold text in the same style, so counting them m
 card is marked as a card and a citation as a citation, and the counts matched my hand count
 exactly.</p>
 
-<p>The word counts needed a second correction, and this one came from outside. I ran the same
+<p>I ran the same
 files through ChatGPT and its totals did not match Claude's. <span class="cu">Both formats break
 text wherever the formatting changes, so highlighting half of a word stores it as two pieces</span>
 &mdash; and counting those pieces separately inflated every total by about 2%. The script now
 reassembles the text before counting words. <mark>The corrected totals match what you get by
 counting the Word versions a paragraph at a time, which is two different parsers over two file
 formats agreeing to the word.</mark></p>
+
+<p>Then I asked GLM as well. Here is what each attempt produced for the fisheries file, against
+the count I did by hand:</p>
+
+<table class="tally">
+<thead><tr><th>Who counted</th><th>Cards</th><th>Words</th></tr></thead>
+<tbody>
+<tr class="verified"><td class="who">Me, by hand<span class="note">reading the document</span></td><td class="num">56</td><td class="num">&mdash;</td></tr>
+<tr><td class="who">Claude, 1st try<span class="note">reading the .docx, guessing from formatting</span></td><td class="num bad">63</td><td class="num">66,331</td></tr>
+<tr><td class="who">Claude, 2nd try<span class="note">reading the .cmir, counted every card node</span></td><td class="num bad">93</td><td class="num bad">67,558</td></tr>
+<tr class="verified"><td class="who">Claude, corrected<span class="note">cards with a citation; words reassembled first</span></td><td class="num">56</td><td class="num">66,331</td></tr>
+<tr><td class="who">ChatGPT<span class="note">script cannot open a .cmir; numbers not computed</span></td><td class="num bad">93</td><td class="num bad">67,068</td></tr>
+<tr><td class="who">GLM<span class="note">ran correctly, same two method errors as Claude's 2nd try</span></td><td class="num bad">93</td><td class="num bad">67,558</td></tr>
+</tbody>
+</table>
+
+<p>Two things in that table are worth saying plainly. <mark>Every model that tried this landed on
+93 cards</mark>, because 93 is the number of card-shaped things in the file and 37 of them are
+analytics with no source under them. <span class="cu">A machine reading the file cannot tell the
+difference between an argument I made up and an argument I can back, but a debater can, and so
+can a citation field.</span></p>
+
+<p>And ChatGPT's script does not decompress the file, so it cannot read a .cmir at all. Running
+it returns an error on both files and counts of zero. <span class="cu">The numbers it reported
+were never computed from my documents.</span> Its own answer said the output was what the script
+&ldquo;will produce,&rdquo; and offered to inspect the real files afterward. GLM, by contrast,
+genuinely ran its code &mdash; I re-ran it and got its figures exactly. It was wrong about method,
+not about having done the work.</p>
 
 <p>Claude published a Python script to analyze the files. My Python is rusty, so if anybody wants
 to take a look and correct my findings please feel free. It would be great if I could say someone
