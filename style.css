@@ -39,6 +39,12 @@ h3{font-size:1.3rem;margin:2.1rem 0 .6rem;font-weight:600}
 h4{margin:.2rem 0 .4rem;font-size:1.02rem;font-family:var(--sans)}
 p,li{font-size:1.03rem}.lead{font-size:1.2rem;color:#3a362e}
 mark{background:var(--hl);padding:.03rem .12rem}
+/* debate-card markup — highlight, underline (warrant), bold (tag) */
+.cu{text-decoration:underline;text-decoration-color:var(--accent);
+  text-decoration-thickness:2px;text-underline-offset:3px}
+.cb{font-weight:800}
+mark .cu{text-decoration-color:var(--accent)}
+
 blockquote{margin:1.4rem 0;padding:.9rem 1.2rem;background:#fff;border-left:4px solid var(--accent);
 border-radius:0 8px 8px 0;font-style:italic;color:#3a362e}
 .ref,.note{font-size:.88rem;color:var(--muted)}
